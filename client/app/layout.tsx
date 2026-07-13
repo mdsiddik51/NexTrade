@@ -37,9 +37,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full flex flex-col bg-white text-[#0F172A]">
+      <body className="min-h-full flex flex-col bg-[#0B0C10] text-[#FFFFFF]">
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
@@ -47,12 +47,13 @@ export default function RootLayout({
           position="top-center"
           toastOptions={{
             style: {
-              background: "#FFFFFF",
-              color: "#0F172A",
-              border: "1px solid #E2E8F0",
-              borderRadius: "0px",
+              background: "rgba(255, 255, 255, 0.03)",
+              color: "#FFFFFF",
+              border: "1px solid rgba(255, 255, 255, 0.08)",
+              backdropFilter: "blur(16px)",
+              borderRadius: "12px",
               fontSize: "14px",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
             },
           }}
         />
