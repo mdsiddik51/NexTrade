@@ -1,12 +1,13 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
-import { Eye, EyeOff, ArrowRight, ShieldAlert, Key } from "lucide-react";
-import { Link } from "@heroui/react";
+import { Eye, EyeOff, ArrowRight, ShieldAlert, Key, TrendingUp, Check } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 
-const Login = () => {
+export default function LoginPage() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -91,32 +92,73 @@ const Login = () => {
   }, [router]);
 
   return (
-    <div className="min-h-screen bg-white text-[#0F172A] font-sans flex flex-col justify-between selection:bg-[#FF9500] selection:text-white pt-24">
-      <main className="flex-1 flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md border border-[#E2E8F0] bg-white p-8 lg:p-10 rounded-none">
-          <div className="mb-8">
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-12 bg-white text-[#0F172A] selection:bg-[#FF9500] selection:text-white pt-16">
+      
+      {/* ─── LEFT PANEL (5/12 columns): Minimalist Editorial Panel ─── */}
+      <div className="hidden lg:flex lg:col-span-5 bg-[#0F172A] text-white p-12 flex-col justify-between relative overflow-hidden border-r border-[#1E293B]">
+        {/* Editorial Content */}
+        <div className="space-y-8 z-10 my-auto">
+          <Link href="/" className="inline-flex items-center gap-2.5">
+            <div className="w-8 h-8 bg-[#FF9500] flex items-center justify-center">
+              <TrendingUp className="w-4 h-4 text-white" />
+            </div>
+            <span className="text-base font-bold tracking-tight text-white">
+              Nex<span className="text-[#FF9500]">Trade</span>
+            </span>
+          </Link>
+
+          <h2 className="text-4xl font-light tracking-tight leading-tight pt-10">
+            Real-time market analytics, <span className="text-[#FF9500] font-normal">simplified</span>.
+          </h2>
+
+          <div className="space-y-4 pt-6">
+            {[
+              "Aggregated feeds from top global exchanges",
+              "Zero commission listing and tracking utilities",
+              "Bauhaus design paradigm for clutter-free analysis",
+            ].map((text, idx) => (
+              <div key={idx} className="flex items-center gap-3 text-sm text-[#94A3B8]">
+                <div className="w-5 h-5 rounded-none bg-[#1E293B] flex items-center justify-center shrink-0 border border-white/10">
+                  <Check className="w-3.5 h-3.5 text-[#FF9500]" />
+                </div>
+                <span>{text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Footer info inside Left Panel */}
+        <div className="text-[10px] uppercase tracking-widest text-[#475569] border-t border-white/5 pt-4 z-10">
+          &copy; 2026 NexTrade Technologies Inc.
+        </div>
+      </div>
+
+      {/* ─── RIGHT PANEL (7/12 columns): Form Panel ─── */}
+      <div className="lg:col-span-7 flex items-center justify-center p-8 sm:p-12 lg:p-20 bg-white">
+        <div className="w-full max-w-md space-y-8">
+          <div>
             <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-[#FF9500] font-semibold mb-2">
               <span className="w-1.5 h-1.5 bg-[#FF9500]"></span>
               Secure Network Portal
             </div>
-            <h2 className="text-2xl font-bold tracking-tight text-[#0F172A] rounded-none">
+            <h2 className="text-3xl font-bold tracking-tight text-[#0F172A]">
               LogIn to NexTrade
             </h2>
-            <p className="text-xs text-[#64748B] mt-1">
+            <p className="text-sm text-[#64748B] mt-1">
               Enter your credentials to access your account securely.
             </p>
           </div>
 
           {error && (
-            <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-none flex items-center gap-2 text-xs text-red-600">
+            <div className="p-3.5 bg-red-50 border border-red-200 text-xs text-red-600 flex items-center gap-2 rounded-none">
               <ShieldAlert className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
-          {/* Demo Login Options */}
-          <div className="mb-6 p-4 bg-[#F8F9FA] border border-[#E2E8F0] rounded-none">
-            <div className="flex items-center gap-1.5 text-xs text-[#64748B] font-semibold mb-3 uppercase tracking-wider">
+          {/* Quick Demo Access */}
+          <div className="p-5 bg-[#F8F9FA] border border-[#E2E8F0] rounded-none space-y-3.5">
+            <div className="flex items-center gap-1.5 text-xs text-[#64748B] font-semibold uppercase tracking-wider">
               <Key className="w-3.5 h-3.5 text-[#FF9500]" />
               Quick Demo Access
             </div>
@@ -138,10 +180,11 @@ const Login = () => {
             </div>
           </div>
 
+          {/* Google Auth */}
           <button
             onClick={handleGoogleLogin}
             type="button"
-            className="w-full py-3 px-4 border border-[#E2E8F0] bg-white hover:bg-[#F8F9FA] transition flex items-center justify-center gap-3 text-sm font-medium text-[#0F172A] rounded-none cursor-pointer"
+            className="w-full py-3.5 px-4 border border-[#E2E8F0] bg-white hover:bg-[#F8F9FA] transition flex items-center justify-center gap-3 text-sm font-medium text-[#0F172A] rounded-none cursor-pointer"
           >
             <svg className="w-4 h-4 text-[#0F172A]" viewBox="0 0 24 24">
               <path
@@ -164,7 +207,7 @@ const Login = () => {
             Authenticate via Google
           </button>
 
-          <div className="relative my-6 flex items-center justify-center">
+          <div className="relative flex items-center justify-center">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-[#E2E8F0]"></div>
             </div>
@@ -173,6 +216,7 @@ const Login = () => {
             </span>
           </div>
 
+          {/* Form */}
           <form onSubmit={handleEmailLogin} className="space-y-4">
             <div>
               <label className="block text-xs uppercase tracking-wider text-[#64748B] mb-1.5">
@@ -207,13 +251,13 @@ const Login = () => {
                 required
                 value={formData.password}
                 onChange={handleInputChange}
-                className="w-full bg-white border border-[#E2E8F0] px-4 py-2.5 text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF9500] transition pr-10 rounded-none"
+                className="w-full bg-white border border-[#E2E8F0] px-4 py-2.5 text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF9500] pr-10 rounded-none"
                 placeholder="••••••••"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-8.5 text-[#64748B] hover:text-[#0F172A] cursor-pointer"
+                className="absolute right-3 top-8.5 text-[#64748B] hover:text-[#0F172A] cursor-pointer animate-none"
               >
                 {showPassword ? (
                   <EyeOff className="w-4 h-4" />
@@ -226,18 +270,18 @@ const Login = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full mt-6 bg-[#FF9500] hover:bg-[#E68600] text-white text-xs font-semibold uppercase tracking-widest py-3.5 px-4 rounded-none transition flex items-center justify-center gap-2 group disabled:opacity-50 cursor-pointer"
+              className="w-full bg-[#FF9500] hover:bg-[#E68600] text-white text-xs font-semibold uppercase tracking-widest py-3.5 px-4 rounded-none transition flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
             >
               {isLoading ? "Processing Authorization..." : "Verify Identity"}
               {!isLoading && (
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4" />
               )}
             </button>
           </form>
 
-          <div className="mt-8 text-center pt-4 border-t border-[#E2E8F0]">
+          <div className="text-center pt-4 border-t border-[#E2E8F0]">
             <p className="text-xs text-[#64748B]">
-              Don't have an account? {"   "}
+              Don't have an account? {" "}
               <Link
                 href="/auth/signup"
                 className="text-[#0F172A] hover:text-[#FF9500] underline underline-offset-4 transition"
@@ -247,14 +291,7 @@ const Login = () => {
             </p>
           </div>
         </div>
-      </main>
-      <footer className="px-6 lg:px-16 py-6 border-t border-[#E2E8F0] text-center flex flex-col sm:flex-row justify-between items-center gap-4 bg-[#F8F9FA]">
-        <div className="text-[10px] uppercase tracking-wider text-[#64748B]">
-          &copy; 2026 NexTrade Systems Node.
-        </div>
-      </footer>
+      </div>
     </div>
   );
-};
-
-export default Login;
+}

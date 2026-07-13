@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { TrendingUp, Mail, Phone, MapPin } from "lucide-react";
+import { TrendingUp, Mail, Phone, MapPin, Send, Globe } from "lucide-react";
 
 const footerLinks = {
   assets: [
@@ -18,6 +18,13 @@ const footerLinks = {
     { label: "Terms of Service", href: "/terms" },
   ],
 };
+
+const socialChannels = [
+  { icon: <Globe className="w-4 h-4" />, href: "#", label: "Web" },
+  { icon: <Send className="w-4 h-4" />, href: "#", label: "Telegram" },
+  { icon: <Mail className="w-4 h-4" />, href: "#", label: "Mail" },
+  { icon: <TrendingUp className="w-4 h-4" />, href: "#", label: "Markets" },
+];
 
 export default function Footer() {
   return (
@@ -41,13 +48,14 @@ export default function Footer() {
             </p>
             {/* Social Links */}
             <div className="flex items-center gap-3">
-              {["X", "Li", "Gh", "Tg"].map((social) => (
+              {socialChannels.map((chan, idx) => (
                 <a
-                  key={social}
-                  href="#"
-                  className="w-9 h-9 bg-white border border-[#E2E8F0] flex items-center justify-center text-xs font-bold text-[#64748B] hover:text-[#FF9500] hover:border-[#FF9500] transition-all"
+                  key={idx}
+                  href={chan.href}
+                  aria-label={chan.label}
+                  className="w-9 h-9 bg-white border border-[#E2E8F0] flex items-center justify-center text-[#64748B] hover:text-[#FF9500] hover:border-[#FF9500] transition-all"
                 >
-                  {social}
+                  {chan.icon}
                 </a>
               ))}
             </div>
