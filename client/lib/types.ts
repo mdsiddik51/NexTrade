@@ -1,31 +1,32 @@
-// ─── Service Types ───────────────────────────────────────────────
-export type ServiceCategory =
-  | "corporate"
-  | "criminal"
-  | "family"
-  | "intellectual-property"
+// ─── Asset Category Types ───────────────────────────────────────
+export type AssetCategory =
+  | "stocks"
+  | "crypto"
   | "real-estate"
-  | "immigration"
-  | "employment"
-  | "tax";
+  | "commodities"
+  | "etf"
+  | "forex"
+  | "nft"
+  | "bonds";
 
-export interface Service {
+// ─── Asset Types ────────────────────────────────────────────────
+export interface Asset {
   _id: string;
   title: string;
   shortDescription: string;
   fullDescription: string;
-  category: ServiceCategory;
-  pricePerHour: number;
+  category: AssetCategory;
+  pricePerUnit: number;
   rating: number;
   reviewCount: number;
-  location: string;
+  exchange: string;
   imageUrl?: string;
-  lawyerName: string;
-  lawyerImage?: string;
-  lawyerEmail: string;
-  casesHandled: number;
-  yearsExperience: number;
-  availability: "available" | "busy" | "unavailable";
+  assetName: string;
+  assetImage?: string;
+  assetEmail: string;
+  volume24h: number;
+  marketCap: number;
+  availability: "available" | "limited" | "closed";
   createdAt: string;
   userId: string;
 }
@@ -36,13 +37,13 @@ export interface User {
   name: string;
   email: string;
   image?: string;
-  role: "client" | "lawyer" | "admin";
+  role: "trader" | "analyst" | "admin";
 }
 
 // ─── Review Types ────────────────────────────────────────────────
 export interface Review {
   _id: string;
-  serviceId: string;
+  assetId: string;
   userId: string;
   userName: string;
   rating: number;
@@ -65,13 +66,13 @@ export interface ApiError {
 }
 
 // ─── Category Metadata ──────────────────────────────────────────
-export const CATEGORY_LABELS: Record<ServiceCategory, string> = {
-  corporate: "Corporate Law",
-  criminal: "Criminal Defense",
-  family: "Family Law",
-  "intellectual-property": "Intellectual Property",
+export const CATEGORY_LABELS: Record<AssetCategory, string> = {
+  stocks: "Stocks",
+  crypto: "Cryptocurrency",
   "real-estate": "Real Estate",
-  immigration: "Immigration Law",
-  employment: "Employment Law",
-  tax: "Tax Law",
+  commodities: "Commodities",
+  etf: "ETFs",
+  forex: "Forex",
+  nft: "NFTs",
+  bonds: "Bonds",
 };

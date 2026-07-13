@@ -1,18 +1,18 @@
 import React from "react";
 import Link from "next/link";
-import { Scale, Mail, Phone, MapPin } from "lucide-react";
+import { TrendingUp, Mail, Phone, MapPin } from "lucide-react";
 
 const footerLinks = {
-  services: [
-    { label: "Corporate Law", href: "/explore?category=corporate" },
-    { label: "Criminal Defense", href: "/explore?category=criminal" },
-    { label: "Family Law", href: "/explore?category=family" },
-    { label: "Intellectual Property", href: "/explore?category=intellectual-property" },
-    { label: "Immigration Law", href: "/explore?category=immigration" },
+  assets: [
+    { label: "Stocks", href: "/explore?category=stocks" },
+    { label: "Cryptocurrency", href: "/explore?category=crypto" },
+    { label: "ETFs", href: "/explore?category=etf" },
+    { label: "Commodities", href: "/explore?category=commodities" },
+    { label: "Forex", href: "/explore?category=forex" },
   ],
   company: [
     { label: "About Us", href: "/about" },
-    { label: "Explore Lawyers", href: "/explore" },
+    { label: "Markets", href: "/explore" },
     { label: "Contact", href: "/contact" },
     { label: "Privacy Policy", href: "/privacy" },
     { label: "Terms of Service", href: "/terms" },
@@ -21,30 +21,31 @@ const footerLinks = {
 
 export default function Footer() {
   return (
-    <footer className="bg-[#07080A] border-t border-white/[0.04]">
+    <footer className="bg-[#F8F9FA] border-t border-[#E2E8F0]">
       {/* ─── Main Footer ─── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link href="/" className="flex items-center gap-2.5 mb-5">
-              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#FF9500] to-[#FF6B00] flex items-center justify-center">
-                <Scale className="w-5 h-5 text-black" />
+              <div className="w-9 h-9 bg-[#FF9500] flex items-center justify-center">
+                <TrendingUp className="w-5 h-5 text-white" />
               </div>
-              <span className="text-lg font-bold tracking-tight text-white">
-                Lex<span className="text-[#FF9500]">Vizo</span>
+              <span className="text-lg font-bold tracking-tight text-[#0F172A]">
+                Nex<span className="text-[#FF9500]">Trade</span>
               </span>
             </Link>
-            <p className="text-sm text-gray-500 leading-relaxed mb-6 max-w-xs">
-              Connecting clients with elite legal professionals. Secure, transparent, and efficient legal services at your fingertips.
+            <p className="text-sm text-[#64748B] leading-relaxed mb-6 max-w-xs">
+              Precision tools for modern asset management. Discover, analyze,
+              and trade across global markets with verified data.
             </p>
             {/* Social Links */}
             <div className="flex items-center gap-3">
-              {["X", "Li", "Fb", "Ig"].map((social) => (
+              {["X", "Li", "Gh", "Tg"].map((social) => (
                 <a
                   key={social}
                   href="#"
-                  className="w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-xs font-bold text-gray-500 hover:text-[#FF9500] hover:border-[#FF9500]/30 transition-all"
+                  className="w-9 h-9 bg-white border border-[#E2E8F0] flex items-center justify-center text-xs font-bold text-[#64748B] hover:text-[#FF9500] hover:border-[#FF9500] transition-all"
                 >
                   {social}
                 </a>
@@ -52,17 +53,17 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Legal Services */}
+          {/* Asset Categories */}
           <div>
             <h4 className="text-xs uppercase tracking-[0.15em] text-[#FF9500] font-semibold mb-5">
-              Legal Services
+              Asset Categories
             </h4>
             <ul className="space-y-3">
-              {footerLinks.services.map((link) => (
+              {footerLinks.assets.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-gray-500 hover:text-white transition-colors"
+                    className="text-sm text-[#64748B] hover:text-[#0F172A] transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -81,7 +82,7 @@ export default function Footer() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-gray-500 hover:text-white transition-colors"
+                    className="text-sm text-[#64748B] hover:text-[#0F172A] transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -97,29 +98,29 @@ export default function Footer() {
             </h4>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 text-gray-600 mt-0.5 shrink-0" />
-                <span className="text-sm text-gray-500">
-                  1200 Justice Avenue, Suite 400
+                <MapPin className="w-4 h-4 text-[#94A3B8] mt-0.5 shrink-0" />
+                <span className="text-sm text-[#64748B]">
+                  350 Market Street, Suite 800
                   <br />
-                  New York, NY 10001
+                  San Francisco, CA 94105
                 </span>
               </li>
               <li className="flex items-center gap-3">
-                <Phone className="w-4 h-4 text-gray-600 shrink-0" />
+                <Phone className="w-4 h-4 text-[#94A3B8] shrink-0" />
                 <a
-                  href="tel:+12125551234"
-                  className="text-sm text-gray-500 hover:text-white transition-colors"
+                  href="tel:+14155551234"
+                  className="text-sm text-[#64748B] hover:text-[#0F172A] transition-colors"
                 >
-                  +1 (212) 555-1234
+                  +1 (415) 555-1234
                 </a>
               </li>
               <li className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-gray-600 shrink-0" />
+                <Mail className="w-4 h-4 text-[#94A3B8] shrink-0" />
                 <a
-                  href="mailto:contact@lexvizo.com"
-                  className="text-sm text-gray-500 hover:text-white transition-colors"
+                  href="mailto:hello@nextrade.io"
+                  className="text-sm text-[#64748B] hover:text-[#0F172A] transition-colors"
                 >
-                  contact@lexvizo.com
+                  hello@nextrade.io
                 </a>
               </li>
             </ul>
@@ -128,16 +129,16 @@ export default function Footer() {
       </div>
 
       {/* ─── Bottom Bar ─── */}
-      <div className="border-t border-white/[0.04]">
+      <div className="border-t border-[#E2E8F0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <p className="text-xs text-gray-600">
-            &copy; {new Date().getFullYear()} LexVizo. All rights reserved.
+          <p className="text-xs text-[#94A3B8]">
+            &copy; {new Date().getFullYear()} NexTrade. All rights reserved.
           </p>
-          <div className="flex items-center gap-6 text-xs text-gray-600">
-            <Link href="/privacy" className="hover:text-gray-400 transition-colors">
+          <div className="flex items-center gap-6 text-xs text-[#94A3B8]">
+            <Link href="/privacy" className="hover:text-[#64748B] transition-colors">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="hover:text-gray-400 transition-colors">
+            <Link href="/terms" className="hover:text-[#64748B] transition-colors">
               Terms of Service
             </Link>
           </div>
