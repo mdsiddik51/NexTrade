@@ -94,6 +94,16 @@ let mockServices: any[] = [
 
 // ─── API Routes ───
 
+// GET /api/health
+app.get("/api/health", (req: Request, res: Response) => {
+  res.json({
+    status: "up",
+    uptime: process.uptime(),
+    database: servicesCollection ? "mongodb" : "mockup-fallback",
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // GET /api/services
 app.get("/api/services", async (req: Request, res: Response) => {
   try {
