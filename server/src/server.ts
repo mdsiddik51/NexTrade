@@ -5,6 +5,25 @@ import { MongoClient, ObjectId } from "mongodb";
 
 dotenv.config();
 
+export interface Service {
+  _id?: string | ObjectId;
+  title: string;
+  shortDescription: string;
+  fullDescription: string;
+  category: string;
+  pricePerHour: number;
+  rating: number;
+  reviewCount: number;
+  location: string;
+  lawyerName: string;
+  lawyerEmail: string;
+  casesHandled: number;
+  yearsExperience: number;
+  availability: "available" | "busy" | "unavailable";
+  createdAt?: string;
+  userId: string;
+}
+
 const app = express();
 const PORT = process.env.PORT || 8080;
 
@@ -167,7 +186,7 @@ app.get("/api/services/:id", async (req: Request, res: Response) => {
     if (servicesCollection) {
       let queryId;
       try {
-        queryId = new ObjectId(id);
+        queryId = new ObjectId(id as string);
       } catch {
         return res.status(404).json({ message: "Invalid ID format" });
       }
@@ -231,7 +250,7 @@ app.delete("/api/services/:id", async (req: Request, res: Response) => {
     if (servicesCollection) {
       let queryId;
       try {
-        queryId = new ObjectId(id);
+        queryId = new ObjectId(id as string);
       } catch {
         return res.status(404).json({ message: "Invalid ID format" });
       }
