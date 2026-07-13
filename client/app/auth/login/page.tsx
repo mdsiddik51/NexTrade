@@ -1,13 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Eye, EyeOff, ArrowRight, ShieldAlert } from "lucide-react";
-import { Link } from "@heroui/react";
-import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
-import toast from "react-hot-toast";
-
-"use client";
-import React, { useEffect, useState } from "react";
 import { Eye, EyeOff, ArrowRight, ShieldAlert, Key } from "lucide-react";
 import { Link } from "@heroui/react";
 import { useRouter } from "next/navigation";
