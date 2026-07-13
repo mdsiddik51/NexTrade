@@ -39,6 +39,7 @@ const Register = () => {
       name: formData.fullName,
       email: formData.email,
       password: formData.password,
+      // @ts-ignore
       role: role,
     });
 
