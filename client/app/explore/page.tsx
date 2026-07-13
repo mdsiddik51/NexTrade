@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import {
   Search,
@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { featuredAssets } from "@/lib/data";
 import { CATEGORY_LABELS } from "@/lib/types";
-import type { AssetCategory } from "@/lib/types";
+import type { Asset, AssetCategory } from "@/lib/types";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -51,6 +51,7 @@ function SkeletonCard() {
 }
 
 export default function ExplorePage() {
+  const [allAssets, setAllAssets] = useState<Asset[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<
     AssetCategory | ""
@@ -59,18 +60,34 @@ export default function ExplorePage() {
   const [sortBy, setSortBy] = useState("rating-desc");
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Simulate initial loading
-  React.useEffect(() => {
-    setIsLoading(true);
-    const timer = setTimeout(() => setIsLoading(false), 800);
-    return () => clearTimeout(timer);
+  // Fetch assets from API on mount, fallback to static data
+  useEffect(() => {
+    const fetchAssets = async () => {
+      try {
+        const API_URL =
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+        const res = await fetch(`${API_URL}/api/services?limit=100`);
+        if (res.ok) {
+          const json = await res.json();
+          setAllAssets(json.data || []);
+        } else {
+          setAllAssets(featuredAssets);
+        }
+      } catch {
+        // API unreachable — use static data as fallback
+        setAllAssets(featuredAssets);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchAssets();
   }, []);
 
   // Filter + Sort + Paginate
   const filteredAssetsList = useMemo(() => {
-    let result = [...featuredAssets];
+    let result = [...allAssets];
 
     // Search
     if (searchQuery) {
@@ -108,7 +125,7 @@ export default function ExplorePage() {
     }
 
     return result;
-  }, [searchQuery, selectedCategory, minRating, sortBy]);
+  }, [allAssets, searchQuery, selectedCategory, minRating, sortBy]);
 
   const totalPages = Math.ceil(filteredAssetsList.length / ITEMS_PER_PAGE);
   const paginatedAssets = filteredAssetsList.slice(

@@ -28,7 +28,12 @@ export interface Asset {
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.ALLOWED_ORIGIN || "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // ─── MongoDB Setup ───
@@ -277,8 +282,15 @@ app.delete("/api/services/:id", async (req: Request, res: Response) => {
   }
 });
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`📡 Server running on http://localhost:${PORT}`);
-  connectDB();
-});
+// Connect to DB on module load (for serverless cold starts)
+connectDB();
+
+// Start Server only when running locally (not on Vercel)
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`📡 Server running on http://localhost:${PORT}`);
+  });
+}
+
+// Export for Vercel serverless
+export default app;
