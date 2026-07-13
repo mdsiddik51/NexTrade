@@ -6,21 +6,21 @@ import { validateServiceInput } from "./middleware/validator";
 
 dotenv.config();
 
-export interface Service {
+export interface Asset {
   _id?: string | ObjectId;
   title: string;
   shortDescription: string;
   fullDescription: string;
   category: string;
-  pricePerHour: number;
+  pricePerUnit: number;
   rating: number;
   reviewCount: number;
-  location: string;
-  lawyerName: string;
-  lawyerEmail: string;
-  casesHandled: number;
-  yearsExperience: number;
-  availability: "available" | "busy" | "unavailable";
+  exchange: string;
+  assetName: string;
+  assetEmail: string;
+  volume24h: number;
+  marketCap: number;
+  availability: "available" | "limited" | "closed";
   createdAt?: string;
   userId: string;
 }
@@ -34,7 +34,7 @@ app.use(express.json());
 // ─── MongoDB Setup ───
 const MONGO_URI = process.env.MONGO_DB_URI || "";
 let db: any = null;
-let servicesCollection: any = null;
+let assetsCollection: any = null;
 
 async function connectDB() {
   if (!MONGO_URI) {
@@ -44,8 +44,8 @@ async function connectDB() {
   try {
     const client = new MongoClient(MONGO_URI);
     await client.connect();
-    db = client.db(process.env.DB_CU || "lextrade");
-    servicesCollection = db.collection("services");
+    db = client.db(process.env.DB_CU || "nextrade");
+    assetsCollection = db.collection("assets");
     console.log("🚀 Connected to MongoDB successfully!");
   } catch (error) {
     console.error("❌ MongoDB Connection failed, falling back to mockup mode:", error);
@@ -53,39 +53,39 @@ async function connectDB() {
 }
 
 // ─── Temporary In-Memory Storage for Demo Fallback ───
-let mockServices: any[] = [
+let mockAssets: any[] = [
   {
-    _id: "svc-001",
-    title: "Corporate Mergers & Acquisitions",
-    shortDescription: "Expert guidance on corporate mergers, acquisitions, and restructuring for enterprises of all scales.",
-    fullDescription: "Our corporate M&A practice provides end-to-end legal support for businesses navigating complex transactions. From due diligence and valuation to regulatory compliance and post-merger integration, we ensure seamless execution.",
-    category: "corporate",
-    pricePerHour: 350,
+    _id: "ast-001",
+    title: "NVIDIA Corp (NVDA)",
+    shortDescription: "Leading AI semiconductor stock with dominant GPU market share and explosive data center revenue growth.",
+    fullDescription: "NVIDIA Corporation is the global leader in GPU-accelerated computing, powering AI training, data centers, autonomous vehicles, and gaming.",
+    category: "stocks",
+    pricePerUnit: 134.52,
     rating: 4.9,
-    reviewCount: 127,
-    location: "New York, NY",
-    lawyerName: "Sarah Mitchell",
-    lawyerEmail: "sarah.mitchell@lexvizo.com",
-    casesHandled: 342,
-    yearsExperience: 18,
+    reviewCount: 2847,
+    exchange: "NASDAQ",
+    assetName: "NVIDIA Corporation",
+    assetEmail: "ir@nvidia.com",
+    volume24h: 42500000,
+    marketCap: 3300000000000,
     availability: "available",
     createdAt: new Date().toISOString(),
     userId: "usr-001",
   },
   {
-    _id: "svc-002",
-    title: "Criminal Defense Litigation",
-    shortDescription: "Aggressive defense strategies for federal and state criminal charges with proven courtroom success.",
-    fullDescription: "When facing criminal charges, you need a defense attorney who fights relentlessly. Our criminal defense practice handles everything from white-collar fraud to complex federal cases.",
-    category: "criminal",
-    pricePerHour: 280,
+    _id: "ast-002",
+    title: "Bitcoin (BTC)",
+    shortDescription: "The original decentralized cryptocurrency. Digital gold with the largest market cap in the crypto ecosystem.",
+    fullDescription: "Bitcoin is the first and most recognized cryptocurrency, operating on a decentralized peer-to-peer network.",
+    category: "crypto",
+    pricePerUnit: 67234.18,
     rating: 4.8,
-    reviewCount: 89,
-    location: "Los Angeles, CA",
-    lawyerName: "James Chen",
-    lawyerEmail: "james.chen@lexvizo.com",
-    casesHandled: 189,
-    yearsExperience: 14,
+    reviewCount: 12453,
+    exchange: "Binance",
+    assetName: "Bitcoin",
+    assetEmail: "info@bitcoin.org",
+    volume24h: 28700000000,
+    marketCap: 1320000000000,
     availability: "available",
     createdAt: new Date().toISOString(),
     userId: "usr-002",
@@ -99,25 +99,24 @@ app.get("/api/health", (req: Request, res: Response) => {
   res.json({
     status: "up",
     uptime: process.uptime(),
-    database: servicesCollection ? "mongodb" : "mockup-fallback",
+    database: assetsCollection ? "mongodb" : "mockup-fallback",
     timestamp: new Date().toISOString(),
   });
 });
 
-// GET /api/services
+// GET /api/services (kept path for frontend route simplicity, handling Assets)
 app.get("/api/services", async (req: Request, res: Response) => {
   try {
     const { search, category, minRating, sort, page = "1", limit = "8" } = req.query;
     const pageNum = parseInt(page as string, 10);
     const limitNum = parseInt(limit as string, 10);
 
-    if (servicesCollection) {
-      // Build MongoDB query
+    if (assetsCollection) {
       const query: any = {};
       if (search) {
         query.$or = [
           { title: { $regex: search, $options: "i" } },
-          { lawyerName: { $regex: search, $options: "i" } },
+          { assetName: { $regex: search, $options: "i" } },
           { shortDescription: { $regex: search, $options: "i" } },
         ];
       }
@@ -128,15 +127,14 @@ app.get("/api/services", async (req: Request, res: Response) => {
         query.rating = { $gte: parseFloat(minRating as string) };
       }
 
-      // Sort
       const sortQuery: any = {};
-      if (sort === "price-asc") sortQuery.pricePerHour = 1;
-      else if (sort === "price-desc") sortQuery.pricePerHour = -1;
-      else if (sort === "experience-desc") sortQuery.yearsExperience = -1;
-      else sortQuery.rating = -1; // default highest rated
+      if (sort === "price-asc") sortQuery.pricePerUnit = 1;
+      else if (sort === "price-desc") sortQuery.pricePerUnit = -1;
+      else if (sort === "volume-desc") sortQuery.volume24h = -1;
+      else sortQuery.rating = -1;
 
-      const total = await servicesCollection.countDocuments(query);
-      const data = await servicesCollection
+      const total = await assetsCollection.countDocuments(query);
+      const data = await assetsCollection
         .find(query)
         .sort(sortQuery)
         .skip((pageNum - 1) * limitNum)
@@ -151,14 +149,13 @@ app.get("/api/services", async (req: Request, res: Response) => {
         totalPages: Math.ceil(total / limitNum),
       });
     } else {
-      // Mock Filtering
-      let result = [...mockServices];
+      let result = [...mockAssets];
       if (search) {
         const q = (search as string).toLowerCase();
         result = result.filter(
           (s) =>
             s.title.toLowerCase().includes(q) ||
-            s.lawyerName.toLowerCase().includes(q) ||
+            s.assetName.toLowerCase().includes(q) ||
             s.shortDescription.toLowerCase().includes(q)
         );
       }
@@ -169,9 +166,8 @@ app.get("/api/services", async (req: Request, res: Response) => {
         result = result.filter((s) => s.rating >= parseFloat(minRating as string));
       }
 
-      // Mock Sorting
-      if (sort === "price-asc") result.sort((a, b) => a.pricePerHour - b.pricePerHour);
-      else if (sort === "price-desc") result.sort((a, b) => b.pricePerHour - a.pricePerHour);
+      if (sort === "price-asc") result.sort((a, b) => a.pricePerUnit - b.pricePerUnit);
+      else if (sort === "price-desc") result.sort((a, b) => b.pricePerUnit - a.pricePerUnit);
       else result.sort((a, b) => b.rating - a.rating);
 
       const total = result.length;
@@ -194,20 +190,20 @@ app.get("/api/services", async (req: Request, res: Response) => {
 app.get("/api/services/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    if (servicesCollection) {
+    if (assetsCollection) {
       let queryId;
       try {
         queryId = new ObjectId(id as string);
       } catch {
         return res.status(404).json({ message: "Invalid ID format" });
       }
-      const service = await servicesCollection.findOne({ _id: queryId });
-      if (!service) return res.status(404).json({ message: "Service not found" });
-      res.json(service);
+      const asset = await assetsCollection.findOne({ _id: queryId });
+      if (!asset) return res.status(404).json({ message: "Asset not found" });
+      res.json(asset);
     } else {
-      const service = mockServices.find((s) => s._id === id);
-      if (!service) return res.status(404).json({ message: "Service not found" });
-      res.json(service);
+      const asset = mockAssets.find((s) => s._id === id);
+      if (!asset) return res.status(404).json({ message: "Asset not found" });
+      res.json(asset);
     }
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -218,11 +214,11 @@ app.get("/api/services/:id", async (req: Request, res: Response) => {
 app.get("/api/services/user/:userId", async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    if (servicesCollection) {
-      const data = await servicesCollection.find({ userId }).toArray();
+    if (assetsCollection) {
+      const data = await assetsCollection.find({ userId }).toArray();
       res.json(data);
     } else {
-      const data = mockServices.filter((s) => s.userId === userId);
+      const data = mockAssets.filter((s) => s.userId === userId);
       res.json(data);
     }
   } catch (error: any) {
@@ -233,21 +229,21 @@ app.get("/api/services/user/:userId", async (req: Request, res: Response) => {
 // POST /api/services
 app.post("/api/services", validateServiceInput, async (req: Request, res: Response) => {
   try {
-    const newService = {
+    const newAsset = {
       ...req.body,
       createdAt: new Date().toISOString(),
     };
 
-    if (servicesCollection) {
-      const result = await servicesCollection.insertOne(newService);
-      res.status(201).json({ ...newService, _id: result.insertedId });
+    if (assetsCollection) {
+      const result = await assetsCollection.insertOne(newAsset);
+      res.status(201).json({ ...newAsset, _id: result.insertedId });
     } else {
-      const createdService = {
-        ...newService,
-        _id: `svc-${Date.now()}`,
+      const createdAsset = {
+        ...newAsset,
+        _id: `ast-${Date.now()}`,
       };
-      mockServices.push(createdService);
-      res.status(201).json(createdService);
+      mockAssets.push(createdAsset);
+      res.status(201).json(createdAsset);
     }
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -258,23 +254,23 @@ app.post("/api/services", validateServiceInput, async (req: Request, res: Respon
 app.delete("/api/services/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    if (servicesCollection) {
+    if (assetsCollection) {
       let queryId;
       try {
         queryId = new ObjectId(id as string);
       } catch {
         return res.status(404).json({ message: "Invalid ID format" });
       }
-      const result = await servicesCollection.deleteOne({ _id: queryId });
+      const result = await assetsCollection.deleteOne({ _id: queryId });
       if (result.deletedCount === 0) {
-        return res.status(404).json({ message: "Service not found" });
+        return res.status(404).json({ message: "Asset not found" });
       }
-      res.json({ message: "Service deleted successfully" });
+      res.json({ message: "Asset deleted successfully" });
     } else {
-      const index = mockServices.findIndex((s) => s._id === id);
-      if (index === -1) return res.status(404).json({ message: "Service not found" });
-      mockServices.splice(index, 1);
-      res.json({ message: "Service deleted successfully" });
+      const index = mockAssets.findIndex((s) => s._id === id);
+      if (index === -1) return res.status(404).json({ message: "Asset not found" });
+      mockAssets.splice(index, 1);
+      res.json({ message: "Asset deleted successfully" });
     }
   } catch (error: any) {
     res.status(500).json({ message: error.message });

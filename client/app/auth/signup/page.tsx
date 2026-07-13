@@ -18,6 +18,7 @@ const Register = () => {
   const [role, setRole] = useState("");
   const [step, setStep] = useState(1);
   const router = useRouter();
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -51,6 +52,7 @@ const Register = () => {
     toast.success("Account created successfully 🎉");
     router.push("/auth/login");
   };
+
   const handleGoogleLogin = async () => {
     await authClient.signIn.social({
       provider: "google",
@@ -58,38 +60,36 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0B0D] text-[#F3F4F6] font-sans flex flex-col justify-between selection:bg-[#FF9500] selection:text-black">
+    <div className="min-h-screen bg-white text-[#0F172A] font-sans flex flex-col justify-between selection:bg-[#FF9500] selection:text-white pt-24">
       <main className="flex-1 flex items-center justify-center px-4 py-12 lg:py-20">
-        <div className="w-full max-w-5xl grid md:grid-cols-12 gap-0 border border-gray-900 rounded-sm overflow-hidden shadow-2xl bg-[#0C0D0F]">
+        <div className="w-full max-w-5xl grid md:grid-cols-12 gap-0 border border-[#E2E8F0] bg-white rounded-none">
       
-          <div className="md:col-span-5 p-8 lg:p-12 bg-linear-to-br from-[#0F1115] to-[#07080A] flex flex-col justify-between border-b md:border-b-0 md:border-r border-gray-900">
+          <div className="md:col-span-5 p-8 lg:p-12 bg-[#F8F9FA] flex flex-col justify-between border-b md:border-b-0 md:border-r border-[#E2E8F0]">
             <div>
               <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-[#FF9500] font-semibold mb-8">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#FF9500]"></span>
-                Vanguard Legal Group
+                <span className="w-1.5 h-1.5 bg-[#FF9500]"></span>
+                NexTrade Platform
               </div>
-              <h2 className="font-serif text-3xl lg:text-4xl font-normal leading-tight tracking-tight text-white mb-4">
-                Join the Architecture of{" "}
-                <span className="text-gray-400 italic">Modern Law.</span>
+              <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-[#0F172A] mb-4">
+                Join the Network of{" "}
+                <span className="text-[#FF9500]">Modern Markets.</span>
               </h2>
-              <p className="text-sm text-gray-400 leading-relaxed max-w-xs">
-                Access elite counsel, data-driven analytics, and secure legal
-                management environments.
+              <p className="text-sm text-[#64748B] leading-relaxed">
+                Access verified listings, real-time asset data, and secure portfolio management metrics.
               </p>
             </div>
 
-            <div className="mt-12 md:mt-0 pt-6 border-t border-gray-900 flex items-center gap-3">
-              <div className="p-2 border border-gray-800 rounded bg-[#0A0B0D]">
+            <div className="mt-12 md:mt-0 pt-6 border-t border-[#E2E8F0] flex items-center gap-3">
+              <div className="p-2 border border-[#E2E8F0] bg-white rounded-none">
                 <ShieldCheck className="w-5 h-5 text-[#FF9500]" />
               </div>
-              <div className="text-[11px] text-gray-500 uppercase tracking-wider">
-                Enterprise-Grade JWT Encryption Secure
+              <div className="text-[11px] text-[#64748B] uppercase tracking-wider">
+                Enterprise-Grade Identity Protection Secure
               </div>
             </div>
           </div>
 
-      
-          <div className="md:col-span-7 p-8 lg:p-12 flex flex-col justify-center">
+          <div className="md:col-span-7 p-8 lg:p-12 flex flex-col justify-center bg-white">
         
             {step === 1 && (
               <div>
@@ -97,18 +97,17 @@ const Register = () => {
                   <div className="text-[10px] uppercase tracking-[0.15em] text-[#FF9500] font-medium mb-1">
                     // Initialization
                   </div>
-                  <h3 className="text-xl font-medium text-white">
+                  <h3 className="text-xl font-medium text-[#0F172A]">
                     Create Account
                   </h3>
                 </div>
 
-      
                 <button
                   onClick={handleGoogleLogin}
                   type="button"
-                  className="w-full py-3 px-4 border border-gray-800 rounded-sm bg-[#0A0B0D] hover:bg-[#121418] hover:border-gray-700 transition flex items-center justify-center gap-3 text-sm font-medium text-gray-300"
+                  className="w-full py-3 px-4 border border-[#E2E8F0] bg-white hover:bg-[#F8F9FA] transition flex items-center justify-center gap-3 text-sm font-medium text-[#0F172A] rounded-none cursor-pointer"
                 >
-                  <svg className="w-4 h-4" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-[#0F172A]" viewBox="0 0 24 24">
                     <path
                       fill="currentColor"
                       d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -131,16 +130,16 @@ const Register = () => {
 
                 <div className="relative my-6 flex items-center justify-center">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-950"></div>
+                    <div className="w-full border-t border-[#E2E8F0]"></div>
                   </div>
-                  <span className="relative bg-[#0C0D0F] px-3 text-[10px] uppercase tracking-widest text-gray-600">
+                  <span className="relative bg-white px-3 text-[10px] uppercase tracking-widest text-[#94A3B8]">
                     Or credentials
                   </span>
                 </div>
 
                 <form onSubmit={handleNextStep} className="space-y-4">
                   <div>
-                    <label className="block text-xs uppercase tracking-wider text-gray-400 mb-1.5">
+                    <label className="block text-xs uppercase tracking-wider text-[#64748B] mb-1.5">
                       Full Name
                     </label>
                     <input
@@ -149,13 +148,13 @@ const Register = () => {
                       required
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      className="w-full bg-[#0A0B0D] border border-gray-800 rounded-sm px-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#FF9500] transition"
+                      className="w-full bg-white border border-[#E2E8F0] px-4 py-2.5 text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF9500] transition rounded-none"
                       placeholder="Alexander Vance"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs uppercase tracking-wider text-gray-400 mb-1.5">
+                    <label className="block text-xs uppercase tracking-wider text-[#64748B] mb-1.5">
                       Corporate Email
                     </label>
                     <input
@@ -164,14 +163,14 @@ const Register = () => {
                       required
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full bg-[#0A0B0D] border border-gray-800 rounded-sm px-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#FF9500] transition"
+                      className="w-full bg-white border border-[#E2E8F0] px-4 py-2.5 text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF9500] transition rounded-none"
                       placeholder="vance@enterprise.com"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="relative">
-                      <label className="block text-xs uppercase tracking-wider text-gray-400 mb-1.5">
+                      <label className="block text-xs uppercase tracking-wider text-[#64748B] mb-1.5">
                         Password
                       </label>
                       <input
@@ -180,13 +179,13 @@ const Register = () => {
                         required
                         value={formData.password}
                         onChange={handleInputChange}
-                        className="w-full bg-[#0A0B0D] border border-gray-800 rounded-sm px-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#FF9500] transition pr-10"
+                        className="w-full bg-white border border-[#E2E8F0] px-4 py-2.5 text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF9500] transition pr-10 rounded-none"
                         placeholder="••••••••"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-8.5 text-gray-500 hover:text-gray-300"
+                        className="absolute right-3 top-8.5 text-[#64748B] hover:text-[#0F172A] cursor-pointer"
                       >
                         {showPassword ? (
                           <EyeOff className="w-4 h-4" />
@@ -197,7 +196,7 @@ const Register = () => {
                     </div>
 
                     <div className="relative">
-                      <label className="block text-xs uppercase tracking-wider text-gray-400 mb-1.5">
+                      <label className="block text-xs uppercase tracking-wider text-[#64748B] mb-1.5">
                         Confirm Password
                       </label>
                       <input
@@ -206,7 +205,7 @@ const Register = () => {
                         required
                         value={formData.confirmPassword}
                         onChange={handleInputChange}
-                        className="w-full bg-[#0A0B0D] border border-gray-800 rounded-sm px-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#FF9500] transition pr-10"
+                        className="w-full bg-white border border-[#E2E8F0] px-4 py-2.5 text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF9500] transition pr-10 rounded-none"
                         placeholder="••••••••"
                       />
                       <button
@@ -214,7 +213,7 @@ const Register = () => {
                         onClick={() =>
                           setShowConfirmPassword(!showConfirmPassword)
                         }
-                        className="absolute right-3 top-8.5 text-gray-500 hover:text-gray-300"
+                        className="absolute right-3 top-8.5 text-[#64748B] hover:text-[#0F172A] cursor-pointer"
                       >
                         {showConfirmPassword ? (
                           <EyeOff className="w-4 h-4" />
@@ -227,7 +226,7 @@ const Register = () => {
 
                   <button
                     type="submit"
-                    className="w-full mt-6 bg-white hover:bg-gray-100 text-black text-xs font-semibold uppercase tracking-widest py-3 px-4 rounded-sm transition flex items-center justify-center gap-2 group"
+                    className="w-full mt-6 bg-[#FF9500] hover:bg-[#E68600] text-white text-xs font-semibold uppercase tracking-widest py-3.5 px-4 rounded-none transition flex items-center justify-center gap-2 group cursor-pointer"
                   >
                     Continue to Role Selection
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -236,17 +235,16 @@ const Register = () => {
               </div>
             )}
 
-         
             {step === 2 && (
               <div>
                 <div className="mb-6">
                   <div className="text-[10px] uppercase tracking-[0.15em] text-[#FF9500] font-medium mb-1">
                     // Global Strategy
                   </div>
-                  <h3 className="text-xl font-medium text-white">
-                    Select Your Vector
+                  <h3 className="text-xl font-medium text-[#0F172A]">
+                    Select Your Role
                   </h3>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-[#64748B] mt-1">
                     Configure your workspace access identity.
                   </p>
                 </div>
@@ -255,88 +253,83 @@ const Register = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         
                     <div
-                      onClick={() => setRole("client")}
-                      className={`cursor-pointer p-5 border rounded-sm transition-all flex flex-col justify-between h-40 bg-[#0A0B0D] ${
-                        role === "client"
+                      onClick={() => setRole("trader")}
+                      className={`cursor-pointer p-5 border rounded-none transition-all flex flex-col justify-between h-40 bg-white ${
+                        role === "trader"
                           ? "border-[#FF9500] ring-1 ring-[#FF9500]"
-                          : "border-gray-800 hover:border-gray-700"
+                          : "border-[#E2E8F0] hover:border-[#CBD5E1]"
                       }`}
                     >
                       <div className="flex justify-between items-start">
                         <span
-                          className={`text-[10px] uppercase font-mono px-2 py-0.5 rounded-sm border ${
-                            role === "client"
+                          className={`text-[10px] uppercase font-mono px-2 py-0.5 rounded-none border ${
+                            role === "trader"
                               ? "border-[#FF9500] text-[#FF9500]"
-                              : "border-gray-800 text-gray-500"
+                              : "border-[#E2E8F0] text-[#94A3B8]"
                           }`}
                         >
                           01
                         </span>
                         <div
-                          className={`w-3 h-3 rounded-full border flex items-center justify-center ${role === "client" ? "border-[#FF9500]" : "border-gray-700"}`}
+                          className={`w-3 h-3 rounded-full border flex items-center justify-center ${role === "trader" ? "border-[#FF9500]" : "border-[#E2E8F0]"}`}
                         >
-                          {role === "client" && (
+                          {role === "trader" && (
                             <div className="w-1.5 h-1.5 rounded-full bg-[#FF9500]" />
                           )}
                         </div>
                       </div>
                       <div>
-                        <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-1">
-                          Client / User
+                        <h4 className="text-sm font-semibold text-[#0F172A] uppercase tracking-wider mb-1">
+                          Trader / Investor
                         </h4>
-                        <p className="text-[11px] text-gray-400 leading-normal">
-                          Find trusted lawyers, manage your legal cases, and
-                          connect with experienced legal professionals—all in
-                          one secure platform.
+                        <p className="text-[11px] text-[#64748B] leading-normal">
+                          Explore, analyze, watchlist, and track high-value global assets across multiple markets.
                         </p>
                       </div>
                     </div>
 
-         
                     <div
-                      onClick={() => setRole("lawyer")}
-                      className={`cursor-pointer p-5 border rounded-sm transition-all flex flex-col justify-between h-40 bg-[#0A0B0D] ${
-                        role === "lawyer"
+                      onClick={() => setRole("analyst")}
+                      className={`cursor-pointer p-5 border rounded-none transition-all flex flex-col justify-between h-40 bg-white ${
+                        role === "analyst"
                           ? "border-[#FF9500] ring-1 ring-[#FF9500]"
-                          : "border-gray-800 hover:border-gray-700"
+                          : "border-[#E2E8F0] hover:border-[#CBD5E1]"
                       }`}
                     >
                       <div className="flex justify-between items-start">
                         <span
-                          className={`text-[10px] uppercase font-mono px-2 py-0.5 rounded-sm border ${
-                            role === "lawyer"
+                          className={`text-[10px] uppercase font-mono px-2 py-0.5 rounded-none border ${
+                            role === "analyst"
                               ? "border-[#FF9500] text-[#FF9500]"
-                              : "border-gray-800 text-gray-500"
+                              : "border-[#E2E8F0] text-[#94A3B8]"
                           }`}
                         >
                           02
                         </span>
                         <div
-                          className={`w-3 h-3 rounded-full border flex items-center justify-center ${role === "lawyer" ? "border-[#FF9500]" : "border-gray-700"}`}
+                          className={`w-3 h-3 rounded-full border flex items-center justify-center ${role === "analyst" ? "border-[#FF9500]" : "border-[#E2E8F0]"}`}
                         >
-                          {role === "lawyer" && (
+                          {role === "analyst" && (
                             <div className="w-1.5 h-1.5 rounded-full bg-[#FF9500]" />
                           )}
                         </div>
                       </div>
                       <div>
-                        <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-1">
-                          Legal Architect
+                        <h4 className="text-sm font-semibold text-[#0F172A] uppercase tracking-wider mb-1">
+                          Financial Analyst
                         </h4>
-                        <p className="text-[11px] text-gray-400 leading-normal">
-                          Manage your clients, handle legal cases, showcase your
-                          expertise, and grow your legal practice on a trusted
-                          platform.
+                        <p className="text-[11px] text-[#64748B] leading-normal">
+                          List new assets, edit listings, and manage parameters/data feeds on a trusted marketplace.
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between gap-4 pt-4 border-t border-gray-950">
+                  <div className="flex items-center justify-between gap-4 pt-4 border-t border-[#E2E8F0]">
                     <button
                       type="button"
                       onClick={() => setStep(1)}
-                      className="text-xs uppercase tracking-wider text-gray-500 hover:text-gray-300 transition"
+                      className="text-xs uppercase tracking-wider text-[#64748B] hover:text-[#0F172A] transition cursor-pointer"
                     >
                       Back
                     </button>
@@ -344,13 +337,13 @@ const Register = () => {
                     <button
                       type="submit"
                       disabled={!role}
-                      className={`px-6 py-3 text-xs font-semibold uppercase tracking-widest rounded-sm transition-all ${
+                      className={`px-6 py-3 text-xs font-semibold uppercase tracking-widest rounded-none transition-all cursor-pointer ${
                         role
-                          ? "bg-[#FF9500] hover:bg-[#e08300] text-black shadow-lg shadow-[#FF9500]/10"
-                          : "bg-gray-900 text-gray-600 cursor-not-allowed"
+                          ? "bg-[#FF9500] hover:bg-[#E68600] text-white"
+                          : "bg-gray-100 text-gray-400 cursor-not-allowed"
                       }`}
                     >
-                      Complete Architecture
+                      Complete Registration
                     </button>
                   </div>
                 </form>
@@ -358,11 +351,11 @@ const Register = () => {
             )}
 
             <div className="mt-8 text-center">
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-[#64748B]">
                 Already have an account? {" "}
                 <Link
                   href="/auth/login"
-                  className="text-white hover:text-[#FF9500] underline underline-offset-4 transition"
+                  className="text-[#0F172A] hover:text-[#FF9500] underline underline-offset-4 transition"
                 >
                   Log in
                 </Link>
@@ -372,15 +365,15 @@ const Register = () => {
         </div>
       </main>
 
-      <footer className="px-6 lg:px-16 py-6 border-t border-gray-900 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4 bg-[#0A0B0D]">
-        <div className="text-[10px] uppercase tracking-wider text-gray-600">
-          &copy; 2026 LexVizo Global Strategy / Private Practice.
+      <footer className="px-6 lg:px-16 py-6 border-t border-[#E2E8F0] text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4 bg-[#F8F9FA]">
+        <div className="text-[10px] uppercase tracking-wider text-[#64748B]">
+          &copy; 2026 NexTrade Global Strategy / Marketplace Node.
         </div>
-        <div className="flex gap-6 text-[10px] uppercase tracking-wider text-gray-600">
-          <a href="#privacy" className="hover:text-gray-400">
+        <div className="flex gap-6 text-[10px] uppercase tracking-wider text-[#64748B]">
+          <a href="#privacy" className="hover:text-[#0F172A]">
             Governance Policy
           </a>
-          <a href="#terms" className="hover:text-gray-400">
+          <a href="#terms" className="hover:text-[#0F172A]">
             Terms of Service
           </a>
         </div>

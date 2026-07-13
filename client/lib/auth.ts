@@ -13,7 +13,7 @@ export const auth = betterAuth({
       role: {
         type: "string",
         required: false,
-        defaultValue: "client",
+        defaultValue: "trader",
       },
     },
   },
@@ -33,7 +33,7 @@ export const auth = betterAuth({
           return {
             data: {
               ...user,
-              role: (user.role as string) || "client",
+              role: (user.role as string) || "trader",
             },
           };
         },

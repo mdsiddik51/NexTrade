@@ -7,16 +7,16 @@ import toast from "react-hot-toast";
 import {
   Plus,
   DollarSign,
-  MapPin,
+  Globe,
   FileText,
   Tag,
-  Briefcase,
+  TrendingUp,
   Loader2,
 } from "lucide-react";
 import { CATEGORY_LABELS } from "@/lib/types";
-import type { ServiceCategory } from "@/lib/types";
+import type { AssetCategory } from "@/lib/types";
 
-export default function AddServicePage() {
+export default function AddAssetPage() {
   const { data: session, isPending } = useSession();
   const router = useRouter();
 
@@ -24,9 +24,9 @@ export default function AddServicePage() {
     title: "",
     shortDescription: "",
     fullDescription: "",
-    category: "" as ServiceCategory | "",
-    pricePerHour: "",
-    location: "",
+    category: "" as AssetCategory | "",
+    pricePerUnit: "",
+    exchange: "",
     imageUrl: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -34,7 +34,7 @@ export default function AddServicePage() {
   // Redirect if not logged in
   useEffect(() => {
     if (!isPending && !session?.user) {
-      toast.error("Please log in to add a service");
+      toast.error("Please log in to list an asset");
       router.push("/auth/login");
     }
   }, [session, isPending, router]);
@@ -59,26 +59,26 @@ export default function AddServicePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
-          pricePerHour: Number(formData.pricePerHour),
+          pricePerUnit: Number(formData.pricePerUnit),
           userId: session?.user?.id,
-          lawyerName: session?.user?.name,
-          lawyerEmail: session?.user?.email,
+          assetName: session?.user?.name,
+          assetEmail: session?.user?.email,
           rating: 0,
           reviewCount: 0,
-          casesHandled: 0,
-          yearsExperience: 0,
+          volume24h: 0,
+          marketCap: 0,
           availability: "available",
         }),
       });
 
       if (res.ok) {
-        toast.success("Service added successfully!");
+        toast.success("Asset listed successfully!");
         router.push("/items/manage");
       } else {
-        toast.error("Failed to add service. Please try again.");
+        toast.error("Failed to list asset. Please try again.");
       }
     } catch {
-      toast.error("Service saved locally. Backend not connected yet.");
+      toast.error("Asset saved locally. Backend not connected yet.");
       router.push("/items/manage");
     } finally {
       setIsSubmitting(false);
@@ -87,7 +87,7 @@ export default function AddServicePage() {
 
   if (isPending) {
     return (
-      <div className="min-h-screen bg-[#0A0B0D] flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-[#FF9500] animate-spin" />
       </div>
     );
@@ -96,20 +96,20 @@ export default function AddServicePage() {
   if (!session?.user) return null;
 
   return (
-    <div className="min-h-screen bg-[#0A0B0D] pt-24 pb-16">
+    <div className="min-h-screen bg-white pt-32 pb-16">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-10">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-[#FF9500]/10 flex items-center justify-center">
+            <div className="w-10 h-10 bg-[#FFF7ED] border border-[#FF9500]/20 flex items-center justify-center">
               <Plus className="w-5 h-5 text-[#FF9500]" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">
-                Add Legal Service
+              <h1 className="text-2xl font-bold text-[#0F172A]">
+                List New Asset
               </h1>
-              <p className="text-sm text-gray-400">
-                List your legal expertise for clients to discover.
+              <p className="text-sm text-[#64748B]">
+                Register your financial asset details for traders to track.
               </p>
             </div>
           </div>
@@ -118,16 +118,16 @@ export default function AddServicePage() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Title */}
-          <div className="bg-white/[0.02] border border-white/[0.04] rounded-2xl p-6">
-            <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+          <div className="bg-white border border-[#E2E8F0] p-6 rounded-none">
+            <h3 className="text-sm font-semibold text-[#0F172A] mb-4 flex items-center gap-2">
               <FileText className="w-4 h-4 text-[#FF9500]" />
-              Service Information
+              Asset Information
             </h3>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-xs uppercase tracking-wider text-gray-400 mb-1.5">
-                  Service Title *
+                <label className="block text-xs uppercase tracking-wider text-[#64748B] mb-1.5">
+                  Asset Title *
                 </label>
                 <input
                   type="text"
@@ -135,13 +135,13 @@ export default function AddServicePage() {
                   value={formData.title}
                   onChange={handleChange}
                   required
-                  placeholder="e.g., Corporate Mergers & Acquisitions"
-                  className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.06] rounded-xl text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#FF9500]/50 transition"
+                  placeholder="e.g., NVIDIA Corp (NVDA)"
+                  className="w-full px-4 py-3 bg-white border border-[#E2E8F0] text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF9500] transition rounded-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider text-gray-400 mb-1.5">
+                <label className="block text-xs uppercase tracking-wider text-[#64748B] mb-1.5">
                   Short Description *
                 </label>
                 <input
@@ -151,16 +151,16 @@ export default function AddServicePage() {
                   onChange={handleChange}
                   required
                   maxLength={150}
-                  placeholder="Brief overview of your service (max 150 chars)"
-                  className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.06] rounded-xl text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#FF9500]/50 transition"
+                  placeholder="Brief overview of the asset (max 150 chars)"
+                  className="w-full px-4 py-3 bg-white border border-[#E2E8F0] text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF9500] transition rounded-none"
                 />
-                <p className="text-xs text-gray-600 mt-1">
+                <p className="text-xs text-[#94A3B8] mt-1">
                   {formData.shortDescription.length}/150 characters
                 </p>
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider text-gray-400 mb-1.5">
+                <label className="block text-xs uppercase tracking-wider text-[#64748B] mb-1.5">
                   Full Description *
                 </label>
                 <textarea
@@ -169,33 +169,33 @@ export default function AddServicePage() {
                   onChange={handleChange}
                   required
                   rows={5}
-                  placeholder="Detailed description of your legal service, experience, and approach..."
-                  className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.06] rounded-xl text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#FF9500]/50 transition resize-none"
+                  placeholder="Detailed description of the asset, market outlook, and capitalization parameters..."
+                  className="w-full px-4 py-3 bg-white border border-[#E2E8F0] text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF9500] transition resize-none rounded-none"
                 />
               </div>
             </div>
           </div>
 
-          {/* Category + Price + Location */}
-          <div className="bg-white/[0.02] border border-white/[0.04] rounded-2xl p-6">
-            <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+          {/* Details & Pricing */}
+          <div className="bg-white border border-[#E2E8F0] p-6 rounded-none">
+            <h3 className="text-sm font-semibold text-[#0F172A] mb-4 flex items-center gap-2">
               <Tag className="w-4 h-4 text-[#FF9500]" />
-              Details & Pricing
+              Exchange & Price
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs uppercase tracking-wider text-gray-400 mb-1.5">
-                  Practice Area *
+                <label className="block text-xs uppercase tracking-wider text-[#64748B] mb-1.5">
+                  Asset Class *
                 </label>
                 <select
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.06] rounded-xl text-sm text-gray-300 focus:outline-none focus:border-[#FF9500]/50 transition appearance-none cursor-pointer"
+                  className="w-full px-4 py-3 bg-white border border-[#E2E8F0] text-sm text-[#64748B] focus:outline-none focus:border-[#FF9500] transition rounded-none cursor-pointer"
                 >
-                  <option value="">Select category</option>
+                  <option value="">Select asset class</option>
                   {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
                     <option key={key} value={key}>
                       {label}
@@ -205,41 +205,40 @@ export default function AddServicePage() {
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider text-gray-400 mb-1.5 flex items-center gap-1">
+                <label className="block text-xs uppercase tracking-wider text-[#64748B] mb-1.5 flex items-center gap-1">
                   <DollarSign className="w-3 h-3" />
-                  Hourly Rate (USD) *
+                  Unit Price (USD) *
                 </label>
                 <input
                   type="number"
-                  name="pricePerHour"
-                  value={formData.pricePerHour}
+                  name="pricePerUnit"
+                  value={formData.pricePerUnit}
                   onChange={handleChange}
                   required
-                  min={50}
-                  max={1000}
-                  placeholder="250"
-                  className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.06] rounded-xl text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#FF9500]/50 transition"
+                  step="any"
+                  placeholder="100.00"
+                  className="w-full px-4 py-3 bg-white border border-[#E2E8F0] text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF9500] transition rounded-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider text-gray-400 mb-1.5 flex items-center gap-1">
-                  <MapPin className="w-3 h-3" />
-                  Location *
+                <label className="block text-xs uppercase tracking-wider text-[#64748B] mb-1.5 flex items-center gap-1">
+                  <Globe className="w-3 h-3" />
+                  Primary Exchange *
                 </label>
                 <input
                   type="text"
-                  name="location"
-                  value={formData.location}
+                  name="exchange"
+                  value={formData.exchange}
                   onChange={handleChange}
                   required
-                  placeholder="New York, NY"
-                  className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.06] rounded-xl text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#FF9500]/50 transition"
+                  placeholder="e.g., NASDAQ, NYSE, Binance"
+                  className="w-full px-4 py-3 bg-white border border-[#E2E8F0] text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF9500] transition rounded-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider text-gray-400 mb-1.5">
+                <label className="block text-xs uppercase tracking-wider text-[#64748B] mb-1.5">
                   Image URL (optional)
                 </label>
                 <input
@@ -248,7 +247,7 @@ export default function AddServicePage() {
                   value={formData.imageUrl}
                   onChange={handleChange}
                   placeholder="https://example.com/photo.jpg"
-                  className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.06] rounded-xl text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#FF9500]/50 transition"
+                  className="w-full px-4 py-3 bg-white border border-[#E2E8F0] text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF9500] transition rounded-none"
                 />
               </div>
             </div>
@@ -258,17 +257,17 @@ export default function AddServicePage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-4 text-sm font-semibold text-black bg-gradient-to-r from-[#FF9500] to-[#FF6B00] rounded-xl hover:shadow-lg hover:shadow-[#FF9500]/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full py-4 text-sm font-semibold text-white bg-[#FF9500] hover:bg-[#E68600] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-none cursor-pointer uppercase tracking-[0.15em]"
           >
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Publishing Service...
+                Listing Asset...
               </>
             ) : (
               <>
-                <Briefcase className="w-4 h-4" />
-                Publish Service
+                <TrendingUp className="w-4 h-4" />
+                List Asset
               </>
             )}
           </button>

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
 export function validateServiceInput(req: Request, res: Response, next: NextFunction) {
-  const { title, shortDescription, fullDescription, category, pricePerHour, location, userId } = req.body;
+  const { title, shortDescription, fullDescription, category, pricePerUnit, exchange, userId } = req.body;
 
   if (!title || typeof title !== "string" || title.trim().length < 5) {
     return res.status(400).json({ message: "Invalid title. Must be at least 5 characters long." });
@@ -19,13 +19,13 @@ export function validateServiceInput(req: Request, res: Response, next: NextFunc
     return res.status(400).json({ message: "Category is required." });
   }
 
-  const price = Number(pricePerHour);
-  if (isNaN(price) || price < 50 || price > 1000) {
-    return res.status(400).json({ message: "Price must be a number between 50 and 1000 USD." });
+  const price = Number(pricePerUnit);
+  if (isNaN(price) || price < 0.0001) {
+    return res.status(400).json({ message: "Price must be a valid positive number." });
   }
 
-  if (!location || typeof location !== "string") {
-    return res.status(400).json({ message: "Location is required." });
+  if (!exchange || typeof exchange !== "string") {
+    return res.status(400).json({ message: "Exchange is required." });
   }
 
   if (!userId || typeof userId !== "string") {

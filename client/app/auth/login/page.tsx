@@ -38,7 +38,7 @@ const Login = () => {
         return;
       }
 
-      toast.success("Welcome to LexVizo 🎉");
+      toast.success("Welcome to NexTrade 🎉");
       setTimeout(() => {
         window.location.href = "/";
       }, 1000);
@@ -61,19 +61,19 @@ const Login = () => {
     }
   };
 
-  const autofillDemo = (role: "client" | "lawyer") => {
-    if (role === "client") {
+  const autofillDemo = (role: "trader" | "analyst") => {
+    if (role === "trader") {
       setFormData({
-        email: "client@lexvizo.com",
-        password: "DemoClientPassword123!",
+        email: "trader@nextrade.io",
+        password: "DemoTraderPassword123!",
       });
-      toast.success("Autofilled Demo Client credentials");
+      toast.success("Autofilled Demo Trader credentials");
     } else {
       setFormData({
-        email: "lawyer@lexvizo.com",
-        password: "DemoLawyerPassword123!",
+        email: "analyst@nextrade.io",
+        password: "DemoAnalystPassword123!",
       });
-      toast.success("Autofilled Demo Lawyer credentials");
+      toast.success("Autofilled Demo Analyst credentials");
     }
   };
 
@@ -91,49 +91,49 @@ const Login = () => {
   }, [router]);
 
   return (
-    <div className="min-h-screen bg-[#0A0B0D] text-[#F3F4F6] font-sans flex flex-col justify-between selection:bg-[#FF9500] selection:text-black">
-      <main className="flex-1 flex items-center justify-center px-4 py-12 ">
-        <div className="w-full max-w-md border border-white/[0.04] rounded-2xl overflow-hidden shadow-2xl bg-[#0C0D0F] p-8 lg:p-10">
+    <div className="min-h-screen bg-white text-[#0F172A] font-sans flex flex-col justify-between selection:bg-[#FF9500] selection:text-white pt-24">
+      <main className="flex-1 flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-md border border-[#E2E8F0] bg-white p-8 lg:p-10 rounded-none">
           <div className="mb-8">
             <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-[#FF9500] font-semibold mb-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#FF9500]"></span>
+              <span className="w-1.5 h-1.5 bg-[#FF9500]"></span>
               Secure Network Portal
             </div>
-            <h2 className="text-2xl font-bold tracking-tight text-white">
-              LogIn to LexVizo
+            <h2 className="text-2xl font-bold tracking-tight text-[#0F172A] rounded-none">
+              LogIn to NexTrade
             </h2>
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-[#64748B] mt-1">
               Enter your credentials to access your account securely.
             </p>
           </div>
 
           {error && (
-            <div className="mb-6 p-3 bg-red-950/30 border border-red-900/50 rounded-xl flex items-center gap-2 text-xs text-red-400">
+            <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-none flex items-center gap-2 text-xs text-red-600">
               <ShieldAlert className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           {/* Demo Login Options */}
-          <div className="mb-6 p-4 bg-white/[0.02] border border-white/[0.04] rounded-xl">
-            <div className="flex items-center gap-1.5 text-xs text-gray-400 font-semibold mb-3 uppercase tracking-wider">
+          <div className="mb-6 p-4 bg-[#F8F9FA] border border-[#E2E8F0] rounded-none">
+            <div className="flex items-center gap-1.5 text-xs text-[#64748B] font-semibold mb-3 uppercase tracking-wider">
               <Key className="w-3.5 h-3.5 text-[#FF9500]" />
               Quick Demo Access
             </div>
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
-                onClick={() => autofillDemo("client")}
-                className="py-2 px-3 border border-white/[0.04] rounded-xl bg-white/[0.01] hover:bg-white/[0.04] text-xs font-semibold text-[#FF9500] transition"
+                onClick={() => autofillDemo("trader")}
+                className="py-2 px-3 border border-[#E2E8F0] bg-white hover:bg-[#F8F9FA] text-xs font-semibold text-[#FF9500] transition rounded-none cursor-pointer"
               >
-                Demo Client
+                Demo Trader
               </button>
               <button
                 type="button"
-                onClick={() => autofillDemo("lawyer")}
-                className="py-2 px-3 border border-white/[0.04] rounded-xl bg-white/[0.01] hover:bg-white/[0.04] text-xs font-semibold text-[#FF9500] transition"
+                onClick={() => autofillDemo("analyst")}
+                className="py-2 px-3 border border-[#E2E8F0] bg-white hover:bg-[#F8F9FA] text-xs font-semibold text-[#FF9500] transition rounded-none cursor-pointer"
               >
-                Demo Lawyer
+                Demo Analyst
               </button>
             </div>
           </div>
@@ -141,9 +141,9 @@ const Login = () => {
           <button
             onClick={handleGoogleLogin}
             type="button"
-            className="w-full py-3 px-4 border border-white/[0.06] rounded-xl bg-[#0A0B0D] hover:bg-[#121418] hover:border-[#FF9500]/30 transition flex items-center justify-center gap-3 text-sm font-medium text-gray-300"
+            className="w-full py-3 px-4 border border-[#E2E8F0] bg-white hover:bg-[#F8F9FA] transition flex items-center justify-center gap-3 text-sm font-medium text-[#0F172A] rounded-none cursor-pointer"
           >
-            <svg className="w-4 h-4 text-white" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-[#0F172A]" viewBox="0 0 24 24">
               <path
                 fill="currentColor"
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -166,16 +166,16 @@ const Login = () => {
 
           <div className="relative my-6 flex items-center justify-center">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/[0.04]"></div>
+              <div className="w-full border-t border-[#E2E8F0]"></div>
             </div>
-            <span className="relative bg-[#0C0D0F] px-3 text-[10px] uppercase tracking-widest text-gray-600">
+            <span className="relative bg-white px-3 text-[10px] uppercase tracking-widest text-[#94A3B8]">
               Or email credentials
             </span>
           </div>
 
           <form onSubmit={handleEmailLogin} className="space-y-4">
             <div>
-              <label className="block text-xs uppercase tracking-wider text-gray-400 mb-1.5">
+              <label className="block text-xs uppercase tracking-wider text-[#64748B] mb-1.5">
                 Identity Vector (Email)
               </label>
               <input
@@ -184,19 +184,19 @@ const Login = () => {
                 required
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full bg-[#0A0B0D] border border-white/[0.06] rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-700 focus:outline-none focus:border-[#FF9500] transition"
+                className="w-full bg-white border border-[#E2E8F0] px-4 py-2.5 text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF9500] transition rounded-none"
                 placeholder="vance@enterprise.com"
               />
             </div>
 
             <div className="relative">
               <div className="flex justify-between items-center mb-1.5">
-                <label className="block text-xs uppercase tracking-wider text-gray-400">
+                <label className="block text-xs uppercase tracking-wider text-[#64748B]">
                   Secret Key (Password)
                 </label>
                 <a
                   href="#forgot"
-                  className="text-[11px] text-gray-500 hover:text-[#FF9500] transition"
+                  className="text-[11px] text-[#64748B] hover:text-[#FF9500] transition"
                 >
                   Recovery?
                 </a>
@@ -207,13 +207,13 @@ const Login = () => {
                 required
                 value={formData.password}
                 onChange={handleInputChange}
-                className="w-full bg-[#0A0B0D] border border-white/[0.06] rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-700 focus:outline-none focus:border-[#FF9500] transition pr-10"
+                className="w-full bg-white border border-[#E2E8F0] px-4 py-2.5 text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF9500] transition pr-10 rounded-none"
                 placeholder="••••••••"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-8.5 text-gray-500 hover:text-gray-300"
+                className="absolute right-3 top-8.5 text-[#64748B] hover:text-[#0F172A] cursor-pointer"
               >
                 {showPassword ? (
                   <EyeOff className="w-4 h-4" />
@@ -226,7 +226,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full mt-6 bg-gradient-to-r from-[#FF9500] to-[#FF6B00] text-black text-xs font-semibold uppercase tracking-widest py-3.5 px-4 rounded-xl transition flex items-center justify-center gap-2 group hover:shadow-lg hover:shadow-[#FF9500]/20 disabled:opacity-50"
+              className="w-full mt-6 bg-[#FF9500] hover:bg-[#E68600] text-white text-xs font-semibold uppercase tracking-widest py-3.5 px-4 rounded-none transition flex items-center justify-center gap-2 group disabled:opacity-50 cursor-pointer"
             >
               {isLoading ? "Processing Authorization..." : "Verify Identity"}
               {!isLoading && (
@@ -235,12 +235,12 @@ const Login = () => {
             </button>
           </form>
 
-          <div className="mt-8 text-center pt-4 border-t border-white/[0.04]">
-            <p className="text-xs text-gray-500">
+          <div className="mt-8 text-center pt-4 border-t border-[#E2E8F0]">
+            <p className="text-xs text-[#64748B]">
               Don't have an account? {"   "}
               <Link
                 href="/auth/signup"
-                className="text-white hover:text-[#FF9500] underline underline-offset-4 transition"
+                className="text-[#0F172A] hover:text-[#FF9500] underline underline-offset-4 transition"
               >
                 Register now
               </Link>
@@ -248,9 +248,9 @@ const Login = () => {
           </div>
         </div>
       </main>
-      <footer className="px-6 lg:px-16 py-6 border-t border-white/[0.04] text-center flex flex-col sm:flex-row justify-between items-center gap-4 bg-[#0A0B0D]">
-        <div className="text-[10px] uppercase tracking-wider text-gray-600">
-          &copy; 2026 LexVizo Systems Node.
+      <footer className="px-6 lg:px-16 py-6 border-t border-[#E2E8F0] text-center flex flex-col sm:flex-row justify-between items-center gap-4 bg-[#F8F9FA]">
+        <div className="text-[10px] uppercase tracking-wider text-[#64748B]">
+          &copy; 2026 NexTrade Systems Node.
         </div>
       </footer>
     </div>
