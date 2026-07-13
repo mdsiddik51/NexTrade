@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { MongoClient, ObjectId } from "mongodb";
+import { validateServiceInput } from "./middleware/validator";
 
 dotenv.config();
 
@@ -220,7 +221,7 @@ app.get("/api/services/user/:userId", async (req: Request, res: Response) => {
 });
 
 // POST /api/services
-app.post("/api/services", async (req: Request, res: Response) => {
+app.post("/api/services", validateServiceInput, async (req: Request, res: Response) => {
   try {
     const newService = {
       ...req.body,
