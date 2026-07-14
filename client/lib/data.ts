@@ -21,7 +21,6 @@ export const featuredAssets: Asset[] = [
     availability: "available",
     createdAt: "2025-11-15T10:00:00Z",
     userId: "usr-001",
-    imageUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
   },
   {
     _id: "ast-002",
@@ -42,7 +41,6 @@ export const featuredAssets: Asset[] = [
     availability: "available",
     createdAt: "2025-12-03T14:30:00Z",
     userId: "usr-002",
-    imageUrl: "https://images.unsplash.com/photo-1516245834210-c4c142787335?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
   },
   {
     _id: "ast-003",
@@ -63,7 +61,6 @@ export const featuredAssets: Asset[] = [
     availability: "available",
     createdAt: "2025-10-20T09:15:00Z",
     userId: "usr-003",
-    imageUrl: "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
   },
   {
     _id: "ast-004",
@@ -84,7 +81,6 @@ export const featuredAssets: Asset[] = [
     availability: "available",
     createdAt: "2025-09-12T11:45:00Z",
     userId: "usr-004",
-    imageUrl: "https://images.unsplash.com/photo-1610374792793-f016b77ca05a?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
   },
   {
     _id: "ast-005",
@@ -105,7 +101,6 @@ export const featuredAssets: Asset[] = [
     availability: "available",
     createdAt: "2026-01-08T16:00:00Z",
     userId: "usr-005",
-    imageUrl: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
   },
   {
     _id: "ast-006",
@@ -126,7 +121,6 @@ export const featuredAssets: Asset[] = [
     availability: "available",
     createdAt: "2025-08-25T13:30:00Z",
     userId: "usr-006",
-    imageUrl: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
   },
   {
     _id: "ast-007",
@@ -147,7 +141,6 @@ export const featuredAssets: Asset[] = [
     availability: "available",
     createdAt: "2026-02-14T08:00:00Z",
     userId: "usr-007",
-    imageUrl: "https://images.unsplash.com/photo-1601597111158-2fceff292cdc?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
   },
   {
     _id: "ast-008",
@@ -168,7 +161,6 @@ export const featuredAssets: Asset[] = [
     availability: "available",
     createdAt: "2026-03-01T10:30:00Z",
     userId: "usr-008",
-    imageUrl: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
   },
 ];
 
