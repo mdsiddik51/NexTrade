@@ -4,7 +4,7 @@ export const logger = {
   info: (message: string, ...args: any[]) => {
     if (IS_DEV) {
       console.log(
-        `%c[LexVizo INFO] %c${message}`,
+        `%c[NexTrade INFO] %c${message}`,
         "color: #FF9500; font-weight: bold;",
         "color: inherit;",
         ...args
@@ -14,7 +14,7 @@ export const logger = {
   warn: (message: string, ...args: any[]) => {
     if (IS_DEV) {
       console.warn(
-        `%c[LexVizo WARN] %c${message}`,
+        `%c[NexTrade WARN] %c${message}`,
         "color: #FFB347; font-weight: bold;",
         "color: inherit;",
         ...args
@@ -23,7 +23,7 @@ export const logger = {
   },
   error: (message: string, ...args: any[]) => {
     console.error(
-      `%c[LexVizo ERROR] %c${message}`,
+      `%c[NexTrade ERROR] %c${message}`,
       "color: #EF4444; font-weight: bold;",
       "color: inherit;",
       ...args

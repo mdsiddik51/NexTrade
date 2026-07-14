@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
@@ -14,15 +14,87 @@ import {
   Calendar,
   Award,
   Users,
+  Loader2,
 } from "lucide-react";
-import { featuredAssets } from "@/lib/data";
-import { CATEGORY_LABELS } from "@/lib/types";
+import { featuredAssets as fallbackAssets } from "@/lib/data";
+import { CATEGORY_LABELS, Asset } from "@/lib/types";
 
 export default function AssetDetailsPage() {
   const params = useParams();
-  const asset = featuredAssets.find((s) => s._id === params.id);
+  const [asset, setAsset] = useState<Asset | null>(null);
+  const [relatedAssets, setRelatedAssets] = useState<Asset[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  if (!asset) {
+  useEffect(() => {
+    const fetchAssetAndRelated = async () => {
+      try {
+        const API_URL =
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+
+        // Fetch asset by ID
+        const res = await fetch(`${API_URL}/api/services/${params.id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setAsset(data);
+
+          // Fetch related assets of the same category
+          const relRes = await fetch(`${API_URL}/api/services?category=${data.category}&limit=10`);
+          if (relRes.ok) {
+            const relJson = await relRes.json();
+            const filtered = (relJson.data || []).filter((s: any) => s._id !== data._id).slice(0, 3);
+            setRelatedAssets(filtered);
+          } else {
+            // Fallback related
+            const filtered = fallbackAssets
+              .filter((s) => s.category === data.category && s._id !== data._id)
+              .slice(0, 3);
+            setRelatedAssets(filtered);
+          }
+        } else {
+          // Try fallback directly
+          const fallbackVal = fallbackAssets.find((s) => s._id === params.id);
+          if (fallbackVal) {
+            setAsset(fallbackVal);
+            const filtered = fallbackAssets
+              .filter((s) => s.category === fallbackVal.category && s._id !== fallbackVal._id)
+              .slice(0, 3);
+            setRelatedAssets(filtered);
+          } else {
+            setError(true);
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching asset details, falling back:", err);
+        const fallbackVal = fallbackAssets.find((s) => s._id === params.id);
+        if (fallbackVal) {
+          setAsset(fallbackVal);
+          const filtered = fallbackAssets
+            .filter((s) => s.category === fallbackVal.category && s._id !== fallbackVal._id)
+            .slice(0, 3);
+          setRelatedAssets(filtered);
+        } else {
+          setError(true);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (params.id) {
+      fetchAssetAndRelated();
+    }
+  }, [params.id]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center pt-32">
+        <Loader2 className="w-8 h-8 text-[#FF9500] animate-spin" />
+      </div>
+    );
+  }
+
+  if (error || !asset) {
     return (
       <div className="min-h-screen bg-white pt-32 text-center">
         <h1 className="text-2xl font-bold text-[#0F172A] mb-4">
@@ -41,11 +113,6 @@ export default function AssetDetailsPage() {
       </div>
     );
   }
-
-  // Related assets (same category, different id)
-  const relatedAssets = featuredAssets
-    .filter((s) => s.category === asset.category && s._id !== asset._id)
-    .slice(0, 3);
 
   return (
     <div className="min-h-screen bg-white pt-32 pb-16">
@@ -96,6 +163,42 @@ export default function AssetDetailsPage() {
                   <TrendingUp className="w-4 h-4" />
                   Vol (24h): {asset.volume24h > 0 ? `$${asset.volume24h.toLocaleString()}` : "N/A"}
                 </span>
+              </div>
+            </div>
+
+            {/* Image Gallery banner */}
+            <div className="bg-white border border-[#E2E8F0] p-4 rounded-none">
+              <div className="aspect-video relative bg-gray-50 overflow-hidden border border-[#E2E8F0] mb-4">
+                {asset.imageUrl ? (
+                  <img
+                    src={asset.imageUrl}
+                    alt={asset.assetName}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 gap-2">
+                    <Globe className="w-10 h-10 text-[#FF9500]" />
+                    <span className="text-xs">No media preview available for this listing</span>
+                  </div>
+                )}
+              </div>
+              <div className="grid grid-cols-4 gap-2">
+                {[1, 2, 3, 4].map((i) => (
+                  <div
+                    key={i}
+                    className="aspect-square bg-gray-50 border border-[#E2E8F0] flex items-center justify-center overflow-hidden hover:border-[#FF9500] transition cursor-pointer"
+                  >
+                    {asset.imageUrl ? (
+                      <img
+                        src={asset.imageUrl}
+                        alt={`${asset.assetName} view ${i}`}
+                        className="w-full h-full object-cover opacity-60 hover:opacity-100 transition"
+                      />
+                    ) : (
+                      <span className="text-[10px] text-gray-400 font-mono">IMG 0{i}</span>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -168,6 +271,57 @@ export default function AssetDetailsPage() {
                     </div>
                     <p className="text-lg font-bold text-[#0F172A]">{item.value}</p>
                     <p className="text-xs text-[#64748B] mt-0.5">{item.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Reviews Section */}
+            <div className="bg-white border border-[#E2E8F0] p-6 sm:p-8 rounded-none">
+              <h2 className="text-lg font-semibold text-[#0F172A] mb-6">
+                Ratings & Reviews ({asset.reviewCount})
+              </h2>
+              <div className="space-y-6">
+                {[
+                  {
+                    name: "Alexander M.",
+                    role: "Institutional Trader",
+                    comment: "The latency parameters are stable and matching official exchange feeds correctly. Essential piece of my portfolio monitoring setup.",
+                    stars: 5,
+                    date: "2 days ago",
+                  },
+                  {
+                    name: "Elena R.",
+                    role: "Quantitative Analyst",
+                    comment: "Clean historical data logs. Would love to see additional futures and derivatives indexes in the next update, but stock/ETF metrics are fully complete.",
+                    stars: 4,
+                    date: "1 week ago",
+                  },
+                ].map((rev, idx) => (
+                  <div
+                    key={idx}
+                    className={`pb-6 ${idx === 0 ? "border-b border-[#F1F5F9]" : ""}`}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <div>
+                        <span className="font-semibold text-sm text-[#0F172A]">{rev.name}</span>
+                        <span className="text-xs text-[#94A3B8] ml-2">({rev.role})</span>
+                      </div>
+                      <span className="text-xs text-[#94A3B8]">{rev.date}</span>
+                    </div>
+                    <div className="flex gap-0.5 mb-2">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-3.5 h-3.5 ${
+                            i < rev.stars
+                              ? "text-[#FF9500] fill-[#FF9500]"
+                              : "text-gray-200"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <p className="text-sm text-[#64748B] leading-relaxed">{rev.comment}</p>
                   </div>
                 ))}
               </div>

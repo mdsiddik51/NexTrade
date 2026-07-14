@@ -35,10 +35,10 @@ export default function Navbar() {
   const authLinks = [
     { href: "/", label: "Home" },
     { href: "/explore", label: "Markets" },
-    { href: "/items/add", label: "List Asset" },
-    { href: "/items/manage", label: "My Portfolio" },
+    { href: "/dashboard", label: "Dashboard" },
+    { href: "/list-asset", label: "List Asset" },
+    { href: "/my-portfolio", label: "My Portfolio" },
     { href: "/about", label: "About" },
-    { href: "/contact", label: "Contact" },
   ];
 
   const links = session?.user ? authLinks : publicLinks;
@@ -129,16 +129,42 @@ export default function Navbar() {
                       className="fixed inset-0 z-40"
                       onClick={() => setIsProfileOpen(false)}
                     />
-                    <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-[#E2E8F0] shadow-lg z-50 overflow-hidden">
-                      <div className="px-4 py-3 border-b border-[#E2E8F0]">
-                        <p className="text-sm font-medium text-[#0F172A] truncate">
+                    <div className="absolute right-0 top-full mt-2 w-60 bg-white border border-[#E2E8F0] shadow-lg z-50 overflow-hidden">
+                      <div className="px-4 py-3 border-b border-[#E2E8F0] bg-[#F8FAFC]">
+                        <p className="text-sm font-semibold text-[#0F172A] truncate">
                           {session.user.name}
                         </p>
-                        <p className="text-xs text-[#64748B] truncate">
+                        <p className="text-xs text-[#64748B] truncate mt-0.5">
                           {session.user.email}
                         </p>
                       </div>
                       <div className="py-1">
+                        <Link
+                          href="/dashboard"
+                          className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#0F172A] hover:bg-[#F8F9FA] transition-colors"
+                          onClick={() => setIsProfileOpen(false)}
+                        >
+                          <svg className="w-4 h-4 text-[#FF9500]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                          Dashboard
+                        </Link>
+                        <Link
+                          href="/my-portfolio"
+                          className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#0F172A] hover:bg-[#F8F9FA] transition-colors"
+                          onClick={() => setIsProfileOpen(false)}
+                        >
+                          <svg className="w-4 h-4 text-[#FF9500]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/><path d="M3 7l9 6 9-6"/></svg>
+                          My Portfolio
+                        </Link>
+                        <Link
+                          href="/list-asset"
+                          className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#0F172A] hover:bg-[#F8F9FA] transition-colors"
+                          onClick={() => setIsProfileOpen(false)}
+                        >
+                          <svg className="w-4 h-4 text-[#FF9500]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                          List New Asset
+                        </Link>
+                      </div>
+                      <div className="border-t border-[#E2E8F0] py-1">
                         <button
                           onClick={handleSignOut}
                           className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors"

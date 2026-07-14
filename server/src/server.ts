@@ -40,6 +40,10 @@ app.use(express.json());
 const MONGO_URI = process.env.MONGO_DB_URI || "";
 let db: any = null;
 let assetsCollection: any = null;
+let testimonialsCollection: any = null;
+let faqCollection: any = null;
+let statsCollection: any = null;
+let categoriesCollection: any = null;
 
 async function connectDB() {
   if (!MONGO_URI) {
@@ -51,6 +55,10 @@ async function connectDB() {
     await client.connect();
     db = client.db(process.env.DB_CU || "nextrade");
     assetsCollection = db.collection("assets");
+    testimonialsCollection = db.collection("testimonials");
+    faqCollection = db.collection("faq");
+    statsCollection = db.collection("stats");
+    categoriesCollection = db.collection("categories");
     console.log("🚀 Connected to MongoDB successfully!");
   } catch (error) {
     console.error("❌ MongoDB Connection failed, falling back to mockup mode:", error);
@@ -97,6 +105,109 @@ let mockAssets: any[] = [
   },
 ];
 
+let mockTestimonials: any[] = [
+  {
+    name: "Marcus Wei",
+    role: "Portfolio Manager, Apex Capital",
+    rating: 5,
+    comment:
+      "NexTrade's data precision and clean interface have become essential to my daily workflow. The real-time asset analytics saved us significant alpha on three consecutive quarters.",
+  },
+  {
+    name: "Elena Rossi",
+    role: "Independent Day Trader",
+    rating: 5,
+    comment:
+      "I switched from two other platforms. NexTrade's minimalist design removes the noise so I can focus on what matters—execution speed and data clarity. No distractions, just results.",
+  },
+  {
+    name: "James Okafor",
+    role: "Crypto Fund Analyst",
+    rating: 5,
+    comment:
+      "The cross-market visibility is unmatched. Monitoring stocks, crypto, and commodities from a single dashboard with verified listings gives our fund a serious edge.",
+  },
+];
+
+let mockFaq: any[] = [
+  {
+    question: "What types of assets can I trade on NexTrade?",
+    answer:
+      "NexTrade supports stocks, cryptocurrency, ETFs, forex pairs, commodities, bonds, real estate tokens, and NFTs. All listings are verified and include real-time market data.",
+  },
+  {
+    question: "How are asset listings verified?",
+    answer:
+      "Every asset on NexTrade undergoes a multi-step verification process including exchange validation, market data cross-referencing, and compliance checks to ensure accuracy and legitimacy.",
+  },
+  {
+    question: "Is my portfolio data secure?",
+    answer:
+      "Absolutely. NexTrade uses enterprise-grade encryption, secure JWT authentication, and follows strict data privacy protocols. Your portfolio and trading data are protected with bank-level security.",
+  },
+  {
+    question: "Can I track assets across multiple exchanges?",
+    answer:
+      "Yes. NexTrade aggregates data from major exchanges including NASDAQ, NYSE, Binance, Coinbase, COMEX, and forex platforms, giving you a unified view of all your positions.",
+  },
+  {
+    question: "How do I list a new asset on the platform?",
+    answer:
+      "Verified analysts can list new assets by navigating to 'List Asset' in the dashboard. Provide the asset details, exchange information, and market data. Our team reviews submissions within 24 hours.",
+  },
+  {
+    question: "Does NexTrade charge trading fees?",
+    answer:
+      "NexTrade provides market data and portfolio management tools. Trading execution happens through your connected exchange accounts. We charge no commission on trades—our revenue comes from premium analytics features.",
+  },
+];
+
+let mockStats: any[] = [
+  { value: "2,400+", label: "Assets Listed" },
+  { value: "18K+", label: "Trades / Day" },
+  { value: "99.7%", label: "Uptime SLA" },
+  { value: "$4.2B", label: "Volume Tracked" },
+];
+
+let mockCategories: any[] = [
+  {
+    title: "Stocks",
+    description: "Equities from NASDAQ, NYSE, and global exchanges.",
+    icon: "TrendingUp",
+    color: "#3B82F6",
+  },
+  {
+    title: "Cryptocurrency",
+    description: "Bitcoin, Ethereum, and 500+ verified digital assets.",
+    icon: "Coins",
+    color: "#F59E0B",
+  },
+  {
+    title: "Real Estate",
+    description: "REITs, tokenized properties, and commercial portfolios.",
+    icon: "Building2",
+    color: "#10B981",
+  },
+  {
+    title: "Commodities",
+    description: "Gold, silver, oil futures, and agricultural products.",
+    icon: "Gem",
+    color: "#EF4444",
+  },
+  {
+    title: "ETFs",
+    description: "Index funds, sector ETFs, and thematic baskets.",
+    icon: "BarChart3",
+    color: "#8B5CF6",
+  },
+  {
+    title: "Forex",
+    description: "Major, minor, and exotic currency pairs with live spreads.",
+    icon: "Globe",
+    color: "#06B6D4",
+  },
+];
+
 // ─── API Routes ───
 
 // GET /api/health
@@ -108,6 +219,63 @@ app.get("/api/health", (req: Request, res: Response) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+// GET /api/testimonials
+app.get("/api/testimonials", async (req: Request, res: Response) => {
+  try {
+    if (testimonialsCollection) {
+      const data = await testimonialsCollection.find({}).toArray();
+      res.json(data);
+    } else {
+      res.json(mockTestimonials);
+    }
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// GET /api/faq
+app.get("/api/faq", async (req: Request, res: Response) => {
+  try {
+    if (faqCollection) {
+      const data = await faqCollection.find({}).toArray();
+      res.json(data);
+    } else {
+      res.json(mockFaq);
+    }
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// GET /api/stats
+app.get("/api/stats", async (req: Request, res: Response) => {
+  try {
+    if (statsCollection) {
+      const data = await statsCollection.find({}).toArray();
+      res.json(data);
+    } else {
+      res.json(mockStats);
+    }
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// GET /api/categories
+app.get("/api/categories", async (req: Request, res: Response) => {
+  try {
+    if (categoriesCollection) {
+      const data = await categoriesCollection.find({}).toArray();
+      res.json(data);
+    } else {
+      res.json(mockCategories);
+    }
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 
 // GET /api/services (kept path for frontend route simplicity, handling Assets)
 app.get("/api/services", async (req: Request, res: Response) => {

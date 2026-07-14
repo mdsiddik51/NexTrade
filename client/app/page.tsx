@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -22,12 +22,22 @@ import {
   Send,
 } from "lucide-react";
 import {
-  featuredAssets,
-  testimonials,
-  faqData,
-  stats,
-  assetCategories,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
+import {
+  featuredAssets as fallbackAssets,
+  testimonials as fallbackTestimonials,
+  faqData as fallbackFaq,
+  stats as fallbackStats,
+  assetCategories as fallbackCategories,
 } from "@/lib/data";
+import type { Asset } from "@/lib/types";
 
 // ─── Icon Map ────────────────────────────────────────────────────
 const iconMap: Record<string, React.ReactNode> = {
@@ -83,6 +93,76 @@ function FAQItem({
 export default function LandingPage() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(0);
   const [email, setEmail] = useState("");
+
+  const [featuredAssets, setFeaturedAssets] = useState<Asset[]>([]);
+  const [testimonials, setTestimonials] = useState<any[]>([]);
+  const [faqData, setFaqData] = useState<any[]>([]);
+  const [stats, setStats] = useState<any[]>([]);
+  const [assetCategories, setAssetCategories] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const API_URL =
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+
+        const [assetsRes, testimonialsRes, faqRes, statsRes, categoriesRes] = await Promise.all([
+          fetch(`${API_URL}/api/services?limit=4`),
+          fetch(`${API_URL}/api/testimonials`),
+          fetch(`${API_URL}/api/faq`),
+          fetch(`${API_URL}/api/stats`),
+          fetch(`${API_URL}/api/categories`),
+        ]);
+
+        if (assetsRes.ok) {
+          const json = await assetsRes.json();
+          setFeaturedAssets(json.data || fallbackAssets.slice(0, 4));
+        } else {
+          setFeaturedAssets(fallbackAssets.slice(0, 4));
+        }
+
+        if (testimonialsRes.ok) {
+          const json = await testimonialsRes.json();
+          setTestimonials(json || fallbackTestimonials);
+        } else {
+          setTestimonials(fallbackTestimonials);
+        }
+
+        if (faqRes.ok) {
+          const json = await faqRes.json();
+          setFaqData(json || fallbackFaq);
+        } else {
+          setFaqData(fallbackFaq);
+        }
+
+        if (statsRes.ok) {
+          const json = await statsRes.json();
+          setStats(json || fallbackStats);
+        } else {
+          setStats(fallbackStats);
+        }
+
+        if (categoriesRes.ok) {
+          const json = await categoriesRes.json();
+          setAssetCategories(json || fallbackCategories);
+        } else {
+          setAssetCategories(fallbackCategories);
+        }
+      } catch (error) {
+        console.error("Failed to fetch landing page data, using fallbacks:", error);
+        setFeaturedAssets(fallbackAssets.slice(0, 4));
+        setTestimonials(fallbackTestimonials);
+        setFaqData(fallbackFaq);
+        setStats(fallbackStats);
+        setAssetCategories(fallbackCategories);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="min-h-screen bg-white text-[#0F172A]">
@@ -296,16 +376,27 @@ export default function LandingPage() {
                 key={asset._id}
                 className="group bg-white border border-[#E2E8F0] overflow-hidden hover:border-[#CBD5E1] hover:shadow-sm transition-all duration-300 flex flex-col"
               >
-                {/* Card Top — Asset Icon + Rating */}
+                {/* Card Top — Asset Image or Icon + Rating */}
+                {asset.imageUrl ? (
+                  <div className="relative w-full h-40 bg-gray-100 overflow-hidden border-b border-[#E2E8F0]">
+                    <img
+                      src={asset.imageUrl}
+                      alt={asset.assetName}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                ) : null}
                 <div className="p-5 pb-0">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 bg-[#FF9500] flex items-center justify-center text-sm font-bold text-white shrink-0">
-                      {asset.assetName
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")
-                        .slice(0, 2)}
-                    </div>
+                    {!asset.imageUrl && (
+                      <div className="w-12 h-12 bg-[#FF9500] flex items-center justify-center text-sm font-bold text-white shrink-0">
+                        {asset.assetName
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .slice(0, 2)}
+                      </div>
+                    )}
                     <div className="min-w-0">
                       <h3 className="text-sm font-semibold text-[#0F172A] truncate">
                         {asset.assetName}
@@ -357,17 +448,97 @@ export default function LandingPage() {
       ═══════════════════════════════════════════════════════════ */}
       <section className="py-20 border-t border-b border-[#E2E8F0] bg-[#F8F9FA]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, idx) => (
-              <div key={idx} className="text-center">
-                <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#0F172A] mb-2">
-                  {stat.value}
-                </div>
-                <div className="text-xs uppercase tracking-[0.15em] text-[#94A3B8] font-medium">
-                  {stat.label}
-                </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+            {/* Stat numbers */}
+            <div className="space-y-8">
+              <div>
+                <span className="text-xs uppercase tracking-[0.2em] text-[#FF9500] font-semibold">
+                  NexTrade Statistics
+                </span>
+                <h2 className="text-3xl font-bold text-[#0F172A] mt-2 leading-tight">
+                  High-Performance Market Infrastructure
+                </h2>
               </div>
-            ))}
+              <div className="grid grid-cols-2 gap-6">
+                {stats.map((stat, idx) => (
+                  <div key={idx} className="border-l-2 border-[#FF9500] pl-4">
+                    <div className="text-2xl sm:text-3xl font-bold text-[#0F172A] tracking-tight">
+                      {stat.value}
+                    </div>
+                    <div className="text-[10px] uppercase tracking-[0.15em] text-[#94A3B8] font-semibold mt-1">
+                      {stat.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Interactive chart */}
+            <div className="lg:col-span-2 bg-white border border-[#E2E8F0] p-6 rounded-none h-[300px] flex flex-col justify-between">
+              <div>
+                <h3 className="text-sm font-semibold text-[#0F172A] mb-1">
+                  NexTrade Monthly Trading Volume (USD)
+                </h3>
+                <p className="text-xs text-[#94A3B8]">
+                  Volume monitored across verified traditional & digital markets.
+                </p>
+              </div>
+              <div className="flex-1 w-full mt-4 min-h-[180px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart
+                    data={[
+                      { month: "Jan", volume: 1.2 },
+                      { month: "Feb", volume: 1.8 },
+                      { month: "Mar", volume: 2.1 },
+                      { month: "Apr", volume: 2.9 },
+                      { month: "May", volume: 3.4 },
+                      { month: "Jun", volume: 4.8 },
+                    ]}
+                    margin={{ top: 5, right: 5, left: -20, bottom: 0 }}
+                  >
+                    <defs>
+                      <linearGradient id="colorVolume" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#FF9500" stopOpacity={0.2}/>
+                        <stop offset="95%" stopColor="#FF9500" stopOpacity={0.0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
+                    <XAxis
+                      dataKey="month"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "#94A3B8", fontSize: 10, fontWeight: 500 }}
+                    />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tickFormatter={(val) => `$${val}B`}
+                      tick={{ fill: "#94A3B8", fontSize: 10, fontWeight: 500 }}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "#0F172A",
+                        border: "none",
+                        borderRadius: "0px",
+                        color: "#fff",
+                        fontSize: "11px",
+                        fontFamily: "monospace",
+                      }}
+                      labelStyle={{ color: "#94A3B8", fontWeight: "bold" }}
+                      formatter={(value: any) => [`$${value} Billion`, "Volume"]}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="volume"
+                      stroke="#FF9500"
+                      strokeWidth={2}
+                      fillOpacity={1}
+                      fill="url(#colorVolume)"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -447,9 +618,9 @@ export default function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {testimonials.map((testimonial) => (
+            {testimonials.map((testimonial, idx) => (
               <div
-                key={testimonial.id}
+                key={testimonial._id || testimonial.id || idx}
                 className="p-6 bg-white border border-[#E2E8F0]"
               >
                 <Quote className="w-8 h-8 text-[#FF9500]/30 mb-4" />
@@ -460,7 +631,7 @@ export default function LandingPage() {
                   <div className="w-10 h-10 bg-[#FF9500] flex items-center justify-center text-xs font-bold text-white">
                     {testimonial.name
                       .split(" ")
-                      .map((n) => n[0])
+                      .map((n: string) => n[0])
                       .join("")}
                   </div>
                   <div>

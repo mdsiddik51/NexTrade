@@ -75,9 +75,11 @@ export default function AddAssetPage() {
         toast.success("Asset listed successfully!");
         router.push("/items/manage");
       } else {
-        toast.error("Failed to list asset. Please try again.");
+        const errorData = await res.json().catch(() => ({}));
+        toast.error(errorData.message || "Failed to list asset. Please try again.");
       }
-    } catch {
+    } catch (error) {
+      console.error("Submit error:", error);
       toast.error("Asset saved locally. Backend not connected yet.");
       router.push("/items/manage");
     } finally {

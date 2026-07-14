@@ -284,15 +284,27 @@ export default function ExplorePage() {
                 key={asset._id}
                 className="group bg-white border border-[#E2E8F0] overflow-hidden hover:border-[#CBD5E1] transition-all duration-300 flex flex-col rounded-none"
               >
+                {/* Card Image */}
+                {asset.imageUrl ? (
+                  <div className="relative w-full h-40 bg-gray-100 overflow-hidden border-b border-[#E2E8F0]">
+                    <img
+                      src={asset.imageUrl}
+                      alt={asset.assetName}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                ) : null}
                 <div className="p-5 pb-0">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 bg-[#FF9500] flex items-center justify-center text-sm font-bold text-white shrink-0">
-                      {asset.assetName
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")
-                        .slice(0, 2)}
-                    </div>
+                    {!asset.imageUrl && (
+                      <div className="w-12 h-12 bg-[#FF9500] flex items-center justify-center text-sm font-bold text-white shrink-0">
+                        {asset.assetName
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .slice(0, 2)}
+                      </div>
+                    )}
                     <div className="min-w-0">
                       <h3 className="text-sm font-semibold text-[#0F172A] truncate">
                         {asset.assetName}

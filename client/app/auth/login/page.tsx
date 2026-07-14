@@ -22,6 +22,14 @@ export default function LoginPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const getCallbackUrl = () => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("callbackUrl") || "/";
+    }
+    return "/";
+  };
+
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -41,7 +49,7 @@ export default function LoginPage() {
 
       toast.success("Welcome to NexTrade 🎉");
       setTimeout(() => {
-        window.location.href = "/";
+        window.location.href = getCallbackUrl();
       }, 1000);
 
     } catch (err) {
@@ -55,26 +63,41 @@ export default function LoginPage() {
     try {
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/", 
+        callbackURL: getCallbackUrl(), 
       });
     } catch (err) {
       toast.error("Social authentication failed.");
     }
   };
 
-  const autofillDemo = (role: "trader" | "analyst") => {
-    if (role === "trader") {
-      setFormData({
-        email: "trader@nextrade.io",
-        password: "DemoTraderPassword123!",
+  const handleDemoLogin = async (role: "trader" | "analyst") => {
+    setIsLoading(true);
+    setError("");
+    const email = role === "trader" ? "trader@nextrade.io" : "analyst@nextrade.io";
+    const password = role === "trader" ? "DemoTraderPassword123!" : "DemoAnalystPassword123!";
+
+    setFormData({ email, password });
+
+    try {
+      const { data, error: authError } = await authClient.signIn.email({
+        email,
+        password,
+        rememberMe: true,
       });
-      toast.success("Autofilled Demo Trader credentials");
-    } else {
-      setFormData({
-        email: "analyst@nextrade.io",
-        password: "DemoAnalystPassword123!",
-      });
-      toast.success("Autofilled Demo Analyst credentials");
+
+      if (authError) {
+        toast.error(authError.message || "Something went wrong");
+        return;
+      }
+
+      toast.success(`Welcome to NexTrade (Demo ${role === 'trader' ? 'Trader' : 'Analyst'}) 🎉`);
+      setTimeout(() => {
+        window.location.href = getCallbackUrl();
+      }, 1000);
+    } catch (err) {
+      setError("Invalid authorization credentials. Access Denied.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -83,7 +106,7 @@ export default function LoginPage() {
       try {
         const { data } = await authClient.getSession();
         if (!data?.user) return;
-        router.replace("/");
+        router.replace(getCallbackUrl());
       } catch (err) {
         console.error("Session verification failed", err);
       }
@@ -165,14 +188,14 @@ export default function LoginPage() {
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
-                onClick={() => autofillDemo("trader")}
+                onClick={() => handleDemoLogin("trader")}
                 className="py-2 px-3 border border-[#E2E8F0] bg-white hover:bg-[#F8F9FA] text-xs font-semibold text-[#FF9500] transition rounded-none cursor-pointer"
               >
                 Demo Trader
               </button>
               <button
                 type="button"
-                onClick={() => autofillDemo("analyst")}
+                onClick={() => handleDemoLogin("analyst")}
                 className="py-2 px-3 border border-[#E2E8F0] bg-white hover:bg-[#F8F9FA] text-xs font-semibold text-[#FF9500] transition rounded-none cursor-pointer"
               >
                 Demo Analyst
