@@ -1,12 +1,42 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, HelpCircle, Phone, Mail, ChevronDown, ChevronUp, ShieldCheck } from "lucide-react";
-import { faqData } from "@/lib/data";
+import { ArrowLeft, HelpCircle, Phone, Mail, ChevronDown, ChevronUp, ShieldCheck, Loader2 } from "lucide-react";
 
 export default function HelpSupportPage() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+  const [faqData, setFaqData] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFaqs = async () => {
+      try {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+        const res = await fetch(`${API_URL}/api/faq`);
+        if (res.ok) {
+          const data = await res.json();
+          setFaqData(data || []);
+        }
+      } catch (err) {
+        console.error("Failed to load FAQs:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchFaqs();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center pt-20">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="w-8 h-8 text-[#FF9500] animate-spin" />
+          <p className="text-sm text-[#64748B] font-medium">Loading help center…</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white pt-32 pb-20">

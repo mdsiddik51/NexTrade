@@ -20,7 +20,12 @@ export interface Asset {
   rating: number;
   reviewCount: number;
   exchange: string;
+  /** Legacy single image URL */
   imageUrl?: string;
+  /** Official company/asset logo */
+  logoUrl?: string;
+  /** Ordered media gallery (charts, photos, etc.) */
+  images?: string[];
   assetName: string;
   assetImage?: string;
   assetEmail: string;

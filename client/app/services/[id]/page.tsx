@@ -16,7 +16,6 @@ import {
   Users,
   Loader2,
 } from "lucide-react";
-import { featuredAssets as fallbackAssets } from "@/lib/data";
 import { CATEGORY_LABELS, Asset } from "@/lib/types";
 
 export default function AssetDetailsPage() {
@@ -25,6 +24,7 @@ export default function AssetDetailsPage() {
   const [relatedAssets, setRelatedAssets] = useState<Asset[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchAssetAndRelated = async () => {
@@ -37,6 +37,7 @@ export default function AssetDetailsPage() {
         if (res.ok) {
           const data = await res.json();
           setAsset(data);
+          setSelectedImage(data.images?.[0] || data.imageUrl || null);
 
           // Fetch related assets of the same category
           const relRes = await fetch(`${API_URL}/api/services?category=${data.category}&limit=10`);
@@ -45,37 +46,14 @@ export default function AssetDetailsPage() {
             const filtered = (relJson.data || []).filter((s: any) => s._id !== data._id).slice(0, 3);
             setRelatedAssets(filtered);
           } else {
-            // Fallback related
-            const filtered = fallbackAssets
-              .filter((s) => s.category === data.category && s._id !== data._id)
-              .slice(0, 3);
-            setRelatedAssets(filtered);
+            setRelatedAssets([]);
           }
-        } else {
-          // Try fallback directly
-          const fallbackVal = fallbackAssets.find((s) => s._id === params.id);
-          if (fallbackVal) {
-            setAsset(fallbackVal);
-            const filtered = fallbackAssets
-              .filter((s) => s.category === fallbackVal.category && s._id !== fallbackVal._id)
-              .slice(0, 3);
-            setRelatedAssets(filtered);
-          } else {
-            setError(true);
-          }
-        }
-      } catch (err) {
-        console.error("Error fetching asset details, falling back:", err);
-        const fallbackVal = fallbackAssets.find((s) => s._id === params.id);
-        if (fallbackVal) {
-          setAsset(fallbackVal);
-          const filtered = fallbackAssets
-            .filter((s) => s.category === fallbackVal.category && s._id !== fallbackVal._id)
-            .slice(0, 3);
-          setRelatedAssets(filtered);
         } else {
           setError(true);
         }
+      } catch (err) {
+        console.error("Error fetching asset details:", err);
+        setError(true);
       } finally {
         setIsLoading(false);
       }
@@ -169,9 +147,9 @@ export default function AssetDetailsPage() {
             {/* Image Gallery banner */}
             <div className="bg-white border border-[#E2E8F0] p-4 rounded-none">
               <div className="aspect-video relative bg-gray-50 overflow-hidden border border-[#E2E8F0] mb-4">
-                {asset.imageUrl ? (
+                {selectedImage ? (
                   <img
-                    src={asset.imageUrl}
+                    src={selectedImage}
                     alt={asset.assetName}
                     className="w-full h-full object-cover"
                   />
@@ -182,24 +160,43 @@ export default function AssetDetailsPage() {
                   </div>
                 )}
               </div>
-              <div className="grid grid-cols-4 gap-2">
-                {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className="aspect-square bg-gray-50 border border-[#E2E8F0] flex items-center justify-center overflow-hidden hover:border-[#FF9500] transition cursor-pointer"
-                  >
-                    {asset.imageUrl ? (
-                      <img
-                        src={asset.imageUrl}
-                        alt={`${asset.assetName} view ${i}`}
-                        className="w-full h-full object-cover opacity-60 hover:opacity-100 transition"
-                      />
-                    ) : (
-                      <span className="text-[10px] text-gray-400 font-mono">IMG 0{i}</span>
-                    )}
-                  </div>
-                ))}
-              </div>
+              
+              {((asset.images && asset.images.length > 0) || asset.imageUrl) && (
+                <div className="grid grid-cols-4 gap-2">
+                  {asset.images && asset.images.length > 0 ? (
+                    asset.images.slice(0, 4).map((imgUrl, i) => (
+                      <div
+                        key={i}
+                        onClick={() => setSelectedImage(imgUrl)}
+                        className={`aspect-square bg-gray-50 border flex items-center justify-center overflow-hidden transition cursor-pointer ${
+                          selectedImage === imgUrl ? "border-[#FF9500] ring-1 ring-[#FF9500]" : "border-[#E2E8F0] hover:border-[#FF9500]"
+                        }`}
+                      >
+                        <img
+                          src={imgUrl}
+                          alt={`${asset.assetName} view ${i + 1}`}
+                          className={`w-full h-full object-cover transition ${
+                            selectedImage === imgUrl ? "opacity-100" : "opacity-60 hover:opacity-100"
+                          }`}
+                        />
+                      </div>
+                    ))
+                  ) : (
+                    asset.imageUrl && (
+                      <div
+                        onClick={() => setSelectedImage(asset.imageUrl || null)}
+                        className="aspect-square bg-gray-50 border border-[#FF9500] ring-1 ring-[#FF9500] flex items-center justify-center overflow-hidden cursor-pointer"
+                      >
+                        <img
+                          src={asset.imageUrl}
+                          alt={asset.assetName}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Description Section */}
@@ -332,12 +329,20 @@ export default function AssetDetailsPage() {
           <div className="space-y-6">
             <div className="bg-white border border-[#E2E8F0] p-6 sticky top-24 rounded-none">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-[#FF9500] flex items-center justify-center text-lg font-bold text-white shrink-0">
-                  {asset.assetName
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")
-                    .slice(0, 2)}
+                <div className="w-16 h-16 bg-[#FFF7ED] border border-[#FF9500]/20 flex items-center justify-center text-lg font-bold text-[#FF9500] shrink-0 overflow-hidden">
+                  {asset.logoUrl ? (
+                    <img
+                      src={asset.logoUrl}
+                      alt={asset.assetName}
+                      className="w-full h-full object-contain p-2"
+                    />
+                  ) : (
+                    asset.assetName
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .slice(0, 2)
+                  )}
                 </div>
                 <div>
                   <h3 className="text-base font-semibold text-[#0F172A]">
@@ -402,12 +407,20 @@ export default function AssetDetailsPage() {
                   className="group p-5 bg-white border border-[#E2E8F0] hover:border-[#CBD5E1] transition-all rounded-none"
                 >
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 bg-[#FF9500] flex items-center justify-center text-xs font-bold text-white shrink-0">
-                      {rel.assetName
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")
-                        .slice(0, 2)}
+                    <div className="w-10 h-10 bg-[#FFF7ED] border border-[#FF9500]/20 flex items-center justify-center text-xs font-bold text-[#FF9500] shrink-0 overflow-hidden">
+                      {rel.logoUrl ? (
+                        <img
+                          src={rel.logoUrl}
+                          alt={rel.assetName}
+                          className="w-full h-full object-contain p-1"
+                        />
+                      ) : (
+                        rel.assetName
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .slice(0, 2)
+                      )}
                     </div>
                     <div>
                       <h4 className="text-sm font-medium text-[#0F172A]">

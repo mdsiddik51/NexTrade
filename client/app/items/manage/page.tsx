@@ -16,7 +16,7 @@ import {
   AlertTriangle,
   X,
 } from "lucide-react";
-import { featuredAssets } from "@/lib/data";
+// Static featuredAssets fallback removed to maintain dynamic data constraints
 import { CATEGORY_LABELS } from "@/lib/types";
 import type { Asset } from "@/lib/types";
 
@@ -49,12 +49,11 @@ export default function ManageAssetsPage() {
             const data = await res.json();
             setAssets(data);
           } else {
-            // Fallback to static data for demo
-            setAssets(featuredAssets.slice(0, 4));
+            setAssets([]);
           }
-        } catch {
-          // Fallback to static data for demo
-          setAssets(featuredAssets.slice(0, 4));
+        } catch (err) {
+          console.error("Failed to load user assets:", err);
+          setAssets([]);
         } finally {
           setIsLoading(false);
         }
@@ -188,14 +187,22 @@ export default function ManageAssetsPage() {
                 >
                   {/* Asset Info */}
                   <div className="md:col-span-4 flex items-center gap-3">
-                    <div className="w-10 h-10 bg-[#FF9500] flex items-center justify-center text-xs font-bold text-white shrink-0">
-                      {asset.assetName
-                        ? asset.assetName
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")
-                            .slice(0, 2)
-                        : "AS"}
+                    <div className="w-10 h-10 bg-[#FFF7ED] border border-[#FF9500]/20 flex items-center justify-center text-xs font-bold text-[#FF9500] shrink-0 overflow-hidden">
+                      {asset.logoUrl ? (
+                        <img
+                          src={asset.logoUrl}
+                          alt={asset.assetName || "Asset"}
+                          className="w-full h-full object-contain p-1"
+                        />
+                      ) : asset.assetName ? (
+                        asset.assetName
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .slice(0, 2)
+                      ) : (
+                        "AS"
+                      )}
                     </div>
                     <div className="min-w-0">
                       <h4 className="text-sm font-medium text-[#0F172A] truncate">

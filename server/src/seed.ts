@@ -24,6 +24,13 @@ const assets = [
     availability: "available",
     createdAt: new Date("2025-11-15T10:00:00Z"),
     userId: "usr-001",
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg",
+    images: [
+      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80",
+      "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=800&q=80",
+      "https://images.unsplash.com/photo-1591696205602-2f950c417cb9?w=800&q=80",
+      "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=800&q=80",
+    ],
   },
   {
     title: "Bitcoin (BTC)",
@@ -43,6 +50,13 @@ const assets = [
     availability: "available",
     createdAt: new Date("2025-12-03T14:30:00Z"),
     userId: "usr-002",
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg",
+    images: [
+      "https://images.unsplash.com/photo-1516245834210-c4c142787335?w=800&q=80",
+      "https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800&q=80",
+      "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80",
+      "https://images.unsplash.com/photo-1640340434855-6084b1f4901c?w=800&q=80",
+    ],
   },
   {
     title: "Vanguard S&P 500 ETF (VOO)",
@@ -62,6 +76,13 @@ const assets = [
     availability: "available",
     createdAt: new Date("2025-10-20T09:15:00Z"),
     userId: "usr-003",
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/8/81/Vanguard.svg",
+    images: [
+      "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80",
+      "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=800&q=80",
+      "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?w=800&q=80",
+      "https://images.unsplash.com/photo-1620288627223-53302f4e8c74?w=800&q=80",
+    ],
   },
   {
     title: "Gold Futures (GC)",
@@ -81,6 +102,13 @@ const assets = [
     availability: "available",
     createdAt: new Date("2025-09-12T11:45:00Z"),
     userId: "usr-004",
+    logoUrl: "https://images.unsplash.com/photo-1624996379697-f01d168b1a52?w=200&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1624996379697-f01d168b1a52?w=800&q=80",
+      "https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=800&q=80",
+      "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=800&q=80",
+      "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?w=800&q=80",
+    ],
   },
   {
     title: "Ethereum (ETH)",
@@ -100,6 +128,13 @@ const assets = [
     availability: "available",
     createdAt: new Date("2026-01-08T16:00:00Z"),
     userId: "usr-005",
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/0/05/Ethereum_logo_2014.svg",
+    images: [
+      "https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800&q=80",
+      "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80",
+      "https://images.unsplash.com/photo-1516245834210-c4c142787335?w=800&q=80",
+      "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80",
+    ],
   },
   {
     title: "Manhattan Commercial REIT",
@@ -119,6 +154,13 @@ const assets = [
     availability: "available",
     createdAt: new Date("2025-08-25T13:30:00Z"),
     userId: "usr-006",
+    logoUrl: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=200&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80",
+      "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80",
+      "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=800&q=80",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80",
+    ],
   },
   {
     title: "EUR/USD Forex Pair",
@@ -138,6 +180,13 @@ const assets = [
     availability: "available",
     createdAt: new Date("2026-02-14T08:00:00Z"),
     userId: "usr-007",
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg",
+    images: [
+      "https://images.unsplash.com/photo-1601597111158-2fceff292cdc?w=800&q=80",
+      "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80",
+      "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=800&q=80",
+      "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?w=800&q=80",
+    ],
   },
   {
     title: "US Treasury 10Y Bond",
@@ -157,6 +206,13 @@ const assets = [
     availability: "available",
     createdAt: new Date("2026-03-01T10:30:00Z"),
     userId: "usr-008",
+    logoUrl: "https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg",
+    images: [
+      "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=800&q=80",
+      "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80",
+      "https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?w=800&q=80",
+      "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?w=800&q=80",
+    ],
   },
 ];
 

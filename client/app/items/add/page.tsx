@@ -28,6 +28,8 @@ export default function AddAssetPage() {
     pricePerUnit: "",
     exchange: "",
     imageUrl: "",
+    logoUrl: "",
+    galleryImages: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -53,13 +55,29 @@ export default function AddAssetPage() {
     setIsSubmitting(true);
 
     try {
+      const imagesArray = formData.galleryImages
+        ? formData.galleryImages.split(",").map((img) => img.trim()).filter((img) => img.length > 0)
+        : [];
+
+      // If gallery images array is empty but imageUrl is present, fall back to adding imageUrl
+      if (imagesArray.length === 0 && formData.imageUrl) {
+        imagesArray.push(formData.imageUrl);
+      }
+
       const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
       const res = await fetch(`${API_URL}/api/services`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...formData,
+          title: formData.title,
+          shortDescription: formData.shortDescription,
+          fullDescription: formData.fullDescription,
+          category: formData.category,
           pricePerUnit: Number(formData.pricePerUnit),
+          exchange: formData.exchange,
+          imageUrl: formData.imageUrl,
+          logoUrl: formData.logoUrl || undefined,
+          images: imagesArray.length > 0 ? imagesArray : undefined,
           userId: session?.user?.id,
           assetName: session?.user?.name,
           assetEmail: session?.user?.email,
@@ -250,6 +268,34 @@ export default function AddAssetPage() {
                   onChange={handleChange}
                   placeholder="https://example.com/photo.jpg"
                   className="w-full px-4 py-3 bg-white border border-[#E2E8F0] text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF9500] transition rounded-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs uppercase tracking-wider text-[#64748B] mb-1.5">
+                  Logo URL (optional)
+                </label>
+                <input
+                  type="url"
+                  name="logoUrl"
+                  value={formData.logoUrl}
+                  onChange={handleChange}
+                  placeholder="https://example.com/logo.svg"
+                  className="w-full px-4 py-3 bg-white border border-[#E2E8F0] text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF9500] transition rounded-none"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="block text-xs uppercase tracking-wider text-[#64748B] mb-1.5">
+                  Gallery Image URLs (optional, comma-separated)
+                </label>
+                <textarea
+                  name="galleryImages"
+                  value={formData.galleryImages}
+                  onChange={handleChange}
+                  rows={2}
+                  placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
+                  className="w-full px-4 py-3 bg-white border border-[#E2E8F0] text-sm text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF9500] transition resize-none rounded-none"
                 />
               </div>
             </div>

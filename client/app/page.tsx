@@ -30,13 +30,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import {
-  featuredAssets as fallbackAssets,
-  testimonials as fallbackTestimonials,
-  faqData as fallbackFaq,
-  stats as fallbackStats,
-  assetCategories as fallbackCategories,
-} from "@/lib/data";
+// All data dynamically loaded from MongoDB - no static fallbacks
 import type { Asset } from "@/lib/types";
 
 // ─── Icon Map ────────────────────────────────────────────────────
@@ -117,45 +111,45 @@ export default function LandingPage() {
 
         if (assetsRes.ok) {
           const json = await assetsRes.json();
-          setFeaturedAssets(json.data || fallbackAssets.slice(0, 4));
+          setFeaturedAssets(json.data || []);
         } else {
-          setFeaturedAssets(fallbackAssets.slice(0, 4));
+          setFeaturedAssets([]);
         }
 
         if (testimonialsRes.ok) {
           const json = await testimonialsRes.json();
-          setTestimonials(json || fallbackTestimonials);
+          setTestimonials(json || []);
         } else {
-          setTestimonials(fallbackTestimonials);
+          setTestimonials([]);
         }
 
         if (faqRes.ok) {
           const json = await faqRes.json();
-          setFaqData(json || fallbackFaq);
+          setFaqData(json || []);
         } else {
-          setFaqData(fallbackFaq);
+          setFaqData([]);
         }
 
         if (statsRes.ok) {
           const json = await statsRes.json();
-          setStats(json || fallbackStats);
+          setStats(json || []);
         } else {
-          setStats(fallbackStats);
+          setStats([]);
         }
 
         if (categoriesRes.ok) {
           const json = await categoriesRes.json();
-          setAssetCategories(json || fallbackCategories);
+          setAssetCategories(json || []);
         } else {
-          setAssetCategories(fallbackCategories);
+          setAssetCategories([]);
         }
       } catch (error) {
-        console.error("Failed to fetch landing page data, using fallbacks:", error);
-        setFeaturedAssets(fallbackAssets.slice(0, 4));
-        setTestimonials(fallbackTestimonials);
-        setFaqData(fallbackFaq);
-        setStats(fallbackStats);
-        setAssetCategories(fallbackCategories);
+        console.error("Failed to fetch landing page data:", error);
+        setFeaturedAssets([]);
+        setTestimonials([]);
+        setFaqData([]);
+        setStats([]);
+        setAssetCategories([]);
       } finally {
         setLoading(false);
       }
@@ -377,10 +371,10 @@ export default function LandingPage() {
                 className="group bg-white border border-[#E2E8F0] overflow-hidden hover:border-[#CBD5E1] hover:shadow-sm transition-all duration-300 flex flex-col"
               >
                 {/* Card Top — Asset Image or Icon + Rating */}
-                {asset.imageUrl ? (
+                {(asset.imageUrl || (asset.images && asset.images.length > 0)) ? (
                   <div className="relative w-full h-40 bg-gray-100 overflow-hidden border-b border-[#E2E8F0]">
                     <img
-                      src={asset.imageUrl}
+                      src={asset.imageUrl || asset.images?.[0]}
                       alt={asset.assetName}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
@@ -388,15 +382,21 @@ export default function LandingPage() {
                 ) : null}
                 <div className="p-5 pb-0">
                   <div className="flex items-center gap-3 mb-4">
-                    {!asset.imageUrl && (
-                      <div className="w-12 h-12 bg-[#FF9500] flex items-center justify-center text-sm font-bold text-white shrink-0">
-                        {asset.assetName
+                    <div className="w-12 h-12 bg-[#FFF7ED] border border-[#FF9500]/20 flex items-center justify-center text-sm font-bold text-[#FF9500] shrink-0 overflow-hidden">
+                      {asset.logoUrl ? (
+                        <img
+                          src={asset.logoUrl}
+                          alt={asset.assetName}
+                          className="w-full h-full object-contain p-1.5"
+                        />
+                      ) : (
+                        asset.assetName
                           .split(" ")
                           .map((n) => n[0])
                           .join("")
-                          .slice(0, 2)}
-                      </div>
-                    )}
+                          .slice(0, 2)
+                      )}
+                    </div>
                     <div className="min-w-0">
                       <h3 className="text-sm font-semibold text-[#0F172A] truncate">
                         {asset.assetName}

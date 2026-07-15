@@ -13,7 +13,7 @@ import {
   X,
   TrendingUp,
 } from "lucide-react";
-import { featuredAssets } from "@/lib/data";
+// Static featuredAssets fallback removed to maintain dynamic data constraints
 import { CATEGORY_LABELS } from "@/lib/types";
 import type { Asset, AssetCategory } from "@/lib/types";
 
@@ -73,11 +73,11 @@ export default function ExplorePage() {
           const json = await res.json();
           setAllAssets(json.data || []);
         } else {
-          setAllAssets(featuredAssets);
+          setAllAssets([]);
         }
-      } catch {
-        // API unreachable — use static data as fallback
-        setAllAssets(featuredAssets);
+      } catch (err) {
+        console.error("Failed to load assets from database:", err);
+        setAllAssets([]);
       } finally {
         setIsLoading(false);
       }
@@ -285,10 +285,10 @@ export default function ExplorePage() {
                 className="group bg-white border border-[#E2E8F0] overflow-hidden hover:border-[#CBD5E1] transition-all duration-300 flex flex-col rounded-none"
               >
                 {/* Card Image */}
-                {asset.imageUrl ? (
+                {(asset.imageUrl || (asset.images && asset.images.length > 0)) ? (
                   <div className="relative w-full h-40 bg-gray-100 overflow-hidden border-b border-[#E2E8F0]">
                     <img
-                      src={asset.imageUrl}
+                      src={asset.imageUrl || asset.images?.[0]}
                       alt={asset.assetName}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
@@ -296,15 +296,21 @@ export default function ExplorePage() {
                 ) : null}
                 <div className="p-5 pb-0">
                   <div className="flex items-center gap-3 mb-4">
-                    {!asset.imageUrl && (
-                      <div className="w-12 h-12 bg-[#FF9500] flex items-center justify-center text-sm font-bold text-white shrink-0">
-                        {asset.assetName
+                    <div className="w-12 h-12 bg-[#FFF7ED] border border-[#FF9500]/20 flex items-center justify-center text-sm font-bold text-[#FF9500] shrink-0 overflow-hidden">
+                      {asset.logoUrl ? (
+                        <img
+                          src={asset.logoUrl}
+                          alt={asset.assetName}
+                          className="w-full h-full object-contain p-1.5"
+                        />
+                      ) : (
+                        asset.assetName
                           .split(" ")
                           .map((n) => n[0])
                           .join("")
-                          .slice(0, 2)}
-                      </div>
-                    )}
+                          .slice(0, 2)
+                      )}
+                    </div>
                     <div className="min-w-0">
                       <h3 className="text-sm font-semibold text-[#0F172A] truncate">
                         {asset.assetName}
